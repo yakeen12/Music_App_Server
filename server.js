@@ -50,9 +50,9 @@ app.use('/api/comments', commentRoutes);
 app.use('/api/posts', postRoutes);
 app.use('/api/secretGifts', secretGiftRoutes);
 
-// app.listen(PORT, () => {
-//     console.log(`http://localhost:${PORT}`);
-// });
+app.listen(PORT, () => {
+    console.log(`http://localhost:${PORT}`);
+});
 
 
 
