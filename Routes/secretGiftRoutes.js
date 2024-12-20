@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { sendSecretGift, getSentGifts, getReceivedGifts } = require('../Controllers/secretGiftController');
-const authenticate = require('../Middleware/authenticate');
+const authenticate = require('../MiddleWare/authenticate');
 
 // Send a secret gift
 router.post('/send', authenticate, sendSecretGift);
