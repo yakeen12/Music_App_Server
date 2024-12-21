@@ -19,7 +19,7 @@ exports.register = async (req, res) => {
     if (userExists) return res.status(400).json({ message: 'Email already exists' });
 
     // console.log("req.file.path");  // طباعة البيانات للتأكد من وصولها
-    console.log("req.file.path:", req.file.path);  // طباعة البيانات للتأكد من وصولها
+    // console.log("req.file.path:", req.file.path);  // طباعة البيانات للتأكد من وصولها
 
 
 
