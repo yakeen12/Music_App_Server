@@ -17,9 +17,13 @@ exports.register = async (req, res) => {
     const userExists = await User.findOne({ email });
     if (userExists) return res.status(400).json({ message: 'Email already exists' });
 
-    print("req.file.path");
-    print(req.file.path);
-    print(req.body["profilePicture"]);
+    console.log("req.file.path");  // طباعة البيانات للتأكد من وصولها
+    console.log("req.file.path:", req.file.path);  // طباعة البيانات للتأكد من وصولها
+    console.log("req.body[]:", req.body["profilePicture"]);  // طباعة البيانات للتأكد من وصولها
+
+    // print("req.file.path");
+    // print(req.file.path);
+    // print(req.body["profilePicture"]);
     let profileImageUrl = null;
     if (req.body["profilePicture"]) {
         const result = await cloudinary.uploader.upload(req.body["profilePicture"], {
