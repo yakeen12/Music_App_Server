@@ -32,7 +32,7 @@ exports.register = async (req, res) => {
     } catch (error) {
         res.status(500).json({ message: 'Error registering user', error });
     }
-    const newUser = new User({ username, email, password: hashedPassword });
+    const newUser = new User({ username, email, password: hashedPassword, profilePicture: profilePicture });
 
 
 }
