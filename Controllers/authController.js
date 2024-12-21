@@ -3,7 +3,7 @@ const jwt = require('jsonwebtoken');
 const User = require('../Models/user');
 const cloudinary = require('../Config/cloudinary'); // تأكد من أنك استوردت cloudinary بشكل صحيح
 const { upload } = require('../MiddleWare/multer'); // تأكد من أنك استوردت multer middleware
-
+require('dotenv').config();
 
 exports.register = async (req, res) => {
     if (!req.body) {
@@ -19,26 +19,7 @@ exports.register = async (req, res) => {
 
     // console.log("req.file.path");  // طباعة البيانات للتأكد من وصولها
     console.log("req.file.path:", req.file.path);  // طباعة البيانات للتأكد من وصولها
-    // console.log("req.body[]:", req.body["profilePicture"]);  // طباعة البيانات للتأكد من وصولها
 
-    // print("req.file.path");
-    // print(req.file.path);
-    // print(req.body["profilePicture"]);
-    // let profileImageUrl = null;
-    // if (req.file) {
-    //     try {
-    //         const result = await cloudinary.uploader.upload(req.file.path, {
-    //             folder: 'user-pfps', // اسم المجلد في Cloudinary
-    //             allowed_formats: ['jpg', 'png', 'jpeg'], // صيغ الملفات المسموح بها
-    //         });
-    //         profileImageUrl = result.secure_url; // الحصول على رابط الصورة
-    //     } catch (error) {
-    //         return res.status(500).send('Error uploading image');
-    //     }
-    // } else {
-    //     // إذا لم يتم رفع صورة، استخدم صورة افتراضية
-    //     profileImageUrl = 'example.com/default-profile-image.jpg'; // استبدل الرابط برابط الصورة الافتراضية الخاصة بك
-    // }
 
 
     const hashedPassword = await bcrypt.hash(password, 10); // قوة التشفير 10 متوسط
@@ -52,11 +33,12 @@ exports.register = async (req, res) => {
         });
 
         await user.save();
+        const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '30d' });
         res.status(201).json({ message: 'User registered successfully', user });
     } catch (error) {
         res.status(500).json({ message: 'Error registering user', error });
     }
-    const newUser = new User({ username, email, password: hashedPassword, profilePicture: profilePicture });
+    const newUser = new User({ username, email, password: hashedPassword, profilePicture: profilePicture }, token);
 
 
 }

@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken');  // استيراد مكتبة JWT
-
+require('dotenv').config();
 // Middleware للتحقق من التوكن
 const authenticate = (req, res, next) => {
     const token = req.header('Authorization');  // الحصول على التوكن من الهيدر
@@ -11,7 +11,7 @@ const authenticate = (req, res, next) => {
 
     // التحقق من صحة التوكن
     try {
-        const decoded = jwt.verify(token, 'your_secret_key');  // فك تشفير التوكن باستخدام المفتاح السري
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);  // فك تشفير التوكن باستخدام المفتاح السري
         req.user = decoded;  // إضافة بيانات المستخدم إلى الـ request
         next();  // السماح بالمتابعة إلى المسار التالي
     } catch (error) {
