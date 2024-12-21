@@ -17,15 +17,19 @@ exports.register = async (req, res) => {
     const userExists = await User.findOne({ email });
     if (userExists) return res.status(400).json({ message: 'Email already exists' });
 
+    print("req.file.path");
+    print(req.file.path);
+    print(req.body["profilePicture"]);
     let profileImageUrl = null;
-    if (req.file) {
-        const result = await cloudinary.uploader.upload(req.file.path, {
+    if (req.body["profilePicture"]) {
+        const result = await cloudinary.uploader.upload(req.body["profilePicture"], {
             folder: 'user-pfps', // اسم المجلد
             allowed_formats: ['jpg', 'png', 'jpeg'], // صيغ الملفات المسموح بها
         });
         profileImageUrl = result.secure_url; // نحصل على رابط الصورة من Cloudinary
-    } else {
-        profileImageUrl = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR4g_2Qj3LsNR-iqUAFm6ut2EQVcaou4u2YXw&s';
+    }
+    else {
+        profileImageUrl = 'empty';
     }
 
     const hashedPassword = await bcrypt.hash(password, 10); // قوة التشفير 10 متوسط
