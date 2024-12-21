@@ -12,33 +12,34 @@ exports.register = async (req, res) => {
     console.log("bodyyyyyyyyy:", req.body);  // طباعة البيانات للتأكد من وصولها
 
     const { username, email, password } = req.body;
-    // const profilePicture = req.file ? req.file.path : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR4g_2Qj3LsNR-iqUAFm6ut2EQVcaou4u2YXw&s';
+    const profilePicture = req.file ? req.file.path : 'example';
 
     const userExists = await User.findOne({ email });
     if (userExists) return res.status(400).json({ message: 'Email already exists' });
 
-    console.log("req.file.path");  // طباعة البيانات للتأكد من وصولها
+    // console.log("req.file.path");  // طباعة البيانات للتأكد من وصولها
     console.log("req.file.path:", req.file.path);  // طباعة البيانات للتأكد من وصولها
-    console.log("req.body[]:", req.body["profilePicture"]);  // طباعة البيانات للتأكد من وصولها
+    // console.log("req.body[]:", req.body["profilePicture"]);  // طباعة البيانات للتأكد من وصولها
 
     // print("req.file.path");
     // print(req.file.path);
     // print(req.body["profilePicture"]);
-    let profileImageUrl = null;
-    if (req.file) {
-        try {
-            const result = await cloudinary.uploader.upload(req.file.path, {
-                folder: 'user-pfps', // اسم المجلد في Cloudinary
-                allowed_formats: ['jpg', 'png', 'jpeg'], // صيغ الملفات المسموح بها
-            });
-            profileImageUrl = result.secure_url; // الحصول على رابط الصورة
-        } catch (error) {
-            return res.status(500).send('Error uploading image');
-        }
-    } else {
-        // إذا لم يتم رفع صورة، استخدم صورة افتراضية
-        profileImageUrl = 'example.com/default-profile-image.jpg'; // استبدل الرابط برابط الصورة الافتراضية الخاصة بك
-    }
+    // let profileImageUrl = null;
+    // if (req.file) {
+    //     try {
+    //         const result = await cloudinary.uploader.upload(req.file.path, {
+    //             folder: 'user-pfps', // اسم المجلد في Cloudinary
+    //             allowed_formats: ['jpg', 'png', 'jpeg'], // صيغ الملفات المسموح بها
+    //         });
+    //         profileImageUrl = result.secure_url; // الحصول على رابط الصورة
+    //     } catch (error) {
+    //         return res.status(500).send('Error uploading image');
+    //     }
+    // } else {
+    //     // إذا لم يتم رفع صورة، استخدم صورة افتراضية
+    //     profileImageUrl = 'example.com/default-profile-image.jpg'; // استبدل الرابط برابط الصورة الافتراضية الخاصة بك
+    // }
+
 
     const hashedPassword = await bcrypt.hash(password, 10); // قوة التشفير 10 متوسط
 
@@ -47,7 +48,7 @@ exports.register = async (req, res) => {
             username,
             email,
             password,
-            profileImageUrl,
+            profilePicture,
         });
 
         await user.save();
@@ -55,7 +56,7 @@ exports.register = async (req, res) => {
     } catch (error) {
         res.status(500).json({ message: 'Error registering user', error });
     }
-    const newUser = new User({ username, email, password: hashedPassword, profilePicture: profileImageUrl });
+    const newUser = new User({ username, email, password: hashedPassword, profilePicture: profilePicture });
 
 
 }
