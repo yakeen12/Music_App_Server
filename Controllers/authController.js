@@ -24,6 +24,8 @@ exports.register = async (req, res) => {
             allowed_formats: ['jpg', 'png', 'jpeg'], // صيغ الملفات المسموح بها
         });
         profileImageUrl = result.secure_url; // نحصل على رابط الصورة من Cloudinary
+    } else {
+        profileImageUrl = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR4g_2Qj3LsNR-iqUAFm6ut2EQVcaou4u2YXw&s';
     }
 
     const hashedPassword = await bcrypt.hash(password, 10); // قوة التشفير 10 متوسط
@@ -41,7 +43,7 @@ exports.register = async (req, res) => {
     } catch (error) {
         res.status(500).json({ message: 'Error registering user', error });
     }
-    const newUser = new User({ username, email, password: hashedPassword, profilePicture: profilePicture });
+    const newUser = new User({ username, email, password: hashedPassword, profilePicture: profileImageUrl });
 
 
 }
