@@ -6,7 +6,7 @@ const { upload } = require('../MiddleWare/multer'); // تأكد من أنك اس
 require('dotenv').config();
 
 exports.register = async (req, res) => {
-    token = null;
+    var token = null;
     if (!req.body) {
         return res.status(400).send('Body is empty!');
     }
@@ -35,11 +35,11 @@ exports.register = async (req, res) => {
 
         await user.save();
         token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '30d' });
-        res.status(201).json({ message: 'User registered successfully', user });
+        res.status(201).json({ message: 'User registered successfully', user, token });
     } catch (error) {
         res.status(500).json({ message: 'Error registering user', error });
     }
-    const newUser = new User({ username, email, password: hashedPassword, profilePicture: profilePicture }, token);
+    const newUser = new User({ username, email, password: hashedPassword, profilePicture: profilePicture });
 
 
 }
