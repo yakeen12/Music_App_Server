@@ -6,7 +6,7 @@ const userSchema = mongoose.Schema({
     email: { type: String, required: true, unique: true },
     // search user by email in the database?
     password: { type: String, required: true },
-    profilePicture: { type: String, default: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR4g_2Qj3LsNR-iqUAFm6ut2EQVcaou4u2YXw&s' },
+    profilePicture: { type: String, },
     // theme ?????????????
     likedSongs: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Song' }],
 
