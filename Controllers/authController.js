@@ -1,7 +1,8 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../Models/user');
-
+const cloudinary = require('../Config/cloudinary'); // تأكد من أنك استوردت cloudinary بشكل صحيح
+const { upload } = require('../MiddleWare/multer'); // تأكد من أنك استوردت multer middleware
 
 
 exports.register = async (req, res) => {
@@ -11,11 +12,19 @@ exports.register = async (req, res) => {
     console.log("bodyyyyyyyyy:", req.body);  // طباعة البيانات للتأكد من وصولها
 
     const { username, email, password } = req.body;
-    const profilePicture = req.body["profileImagePath"] ? req.body["profileImagePath"] : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR4g_2Qj3LsNR-iqUAFm6ut2EQVcaou4u2YXw&s';
+    // const profilePicture = req.file ? req.file.path : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR4g_2Qj3LsNR-iqUAFm6ut2EQVcaou4u2YXw&s';
 
     const userExists = await User.findOne({ email });
     if (userExists) return res.status(400).json({ message: 'Email already exists' });
 
+    let profileImageUrl = null;
+    if (req.file) {
+        const result = await cloudinary.uploader.upload(req.file.path, {
+            folder: 'user-pfps', // اسم المجلد
+            allowed_formats: ['jpg', 'png', 'jpeg'], // صيغ الملفات المسموح بها
+        });
+        profileImageUrl = result.secure_url; // نحصل على رابط الصورة من Cloudinary
+    }
 
     const hashedPassword = await bcrypt.hash(password, 10); // قوة التشفير 10 متوسط
 
@@ -24,7 +33,7 @@ exports.register = async (req, res) => {
             username,
             email,
             password,
-            profilePicture,
+            profileImageUrl,
         });
 
         await user.save();

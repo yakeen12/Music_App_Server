@@ -1,10 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const authController = require('../Controllers/authController');
-const upload = require('../MiddleWare/multer');
 
 // تسجيل مستخدم جديد
-router.post('/register', upload.single('profilePicture'), authController.register);
+router.post('/register', authController.register);
 
 // تسجيل دخول
 router.post('/login', authController.login);
