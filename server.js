@@ -8,6 +8,7 @@ const communityRoutes = require('./Routes/communityRoutes');
 const commentRoutes = require('./Routes/commentRoutes');
 const postRoutes = require('./Routes/postRoutes');
 const secretGiftRoutes = require('./Routes/secretGiftRoutes');
+const upload = require('./MiddleWare/multer'); // استيراد Multer
 
 const mongoose = require('mongoose');
 

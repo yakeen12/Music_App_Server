@@ -3,6 +3,7 @@ const jwt = require('jsonwebtoken');
 const User = require('../Models/user');
 
 
+
 exports.register = async (req, res) => {
     if (!req.body) {
         return res.status(400).send('Body is empty!');
@@ -10,15 +11,29 @@ exports.register = async (req, res) => {
     console.log("bodyyyyyyyyy:", req.body);  // طباعة البيانات للتأكد من وصولها
 
     const { username, email, password } = req.body;
+    const profilePicture = req.file ? req.file.path : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR4g_2Qj3LsNR-iqUAFm6ut2EQVcaou4u2YXw&s';
 
     const userExists = await User.findOne({ email });
     if (userExists) return res.status(400).json({ message: 'Email already exists' });
 
+
     const hashedPassword = await bcrypt.hash(password, 10); // قوة التشفير 10 متوسط
+
+    try {
+        const user = new User({
+            username,
+            email,
+            password,
+            profilePicture,
+        });
+
+        await user.save();
+        res.status(201).json({ message: 'User registered successfully', user });
+    } catch (error) {
+        res.status(500).json({ message: 'Error registering user', error });
+    }
     const newUser = new User({ username, email, password: hashedPassword });
 
-    await newUser.save();
-    res.status(201).json({ message: 'User registered successfully!' });
 
 }
 
