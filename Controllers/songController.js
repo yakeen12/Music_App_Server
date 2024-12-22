@@ -1,19 +1,28 @@
 const Song = require('../Models/song');
 const User = require('../Models/user'); // إذا كنت تحتاج للتفاعل مع المستخدمين
-
+const Artist = require('../Models/artist');
 // إضافة أغنية جديدة
 exports.addSong = async (req, res) => {
-    const { title, artist, genre, url } = req.body;
+    const { title, artistId, genre, url } = req.body;
 
     try {
-        const newSong =  new Song({
+        const artist = await Artist.findById(artistId);
+        if (!artist) {
+            return res.status(404).json({ message: 'Artist not found' });
+        }
+
+
+        const newSong = new Song({
             title,
-            artist,
+            artist: artistId,
             genre,
             url,  // هذا سيشير إلى رابط أو مسار الملف الصوتي
         });
 
         await newSong.save();
+        // تحديث قائمة الأغاني في الفنان
+        artist.songs.push(newSong._id);
+        await artist.save();
         res.status(201).json({ message: 'Song added successfully', song: newSong });
     } catch (error) {
         res.status(500).json({ message: 'Error adding song', error });
@@ -82,13 +91,21 @@ exports.addLike = async (req, res) => {
         }
 
         // إضافة الإعجاب
-        if (!song.likes.includes(userId)) {
-            song.likes.push(userId);
-            await song.save();
-            res.status(200).json({ message: 'Song liked successfully' });
+        // if (!song.likes.includes(userId)) {
+        //     song.likes.push(userId);
+        //     await song.save();
+        //     res.status(200).json({ message: 'Song liked successfully' });
+        // } else {
+        //     res.status(400).json({ message: 'You already liked this song' });
+        // }
+        const index = song.likes.indexOf(userId);
+        if (index === -1) {
+            song.likes.push(userId); // إضافة إعجاب
         } else {
-            res.status(400).json({ message: 'You already liked this song' });
+            song.likes.splice(index, 1); // إزالة إعجاب
         }
+        await song.save();
+        res.status(200).json(song);
     } catch (error) {
         res.status(500).json({ message: 'Error liking song', error });
     }
