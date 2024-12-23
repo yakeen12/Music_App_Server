@@ -12,6 +12,6 @@ router.post('/', songController.addSong);
 // router.delete('/:id', songController.deleteSong);
 
 // إضافة أو إزالة إعجاب
-router.post('/:songId/like', toggleLike);
+router.post('/:songId/like', songController.addLike);
 
 module.exports = router;
