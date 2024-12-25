@@ -4,6 +4,7 @@ const User = require('../Models/user');
 const cloudinary = require('../Config/cloudinary'); // تأكد من أنك استوردت cloudinary بشكل صحيح
 const { upload } = require('../MiddleWare/multer'); // تأكد من أنك استوردت multer middleware
 require('dotenv').config();
+const Blacklist = require('../Models/blacklist');
 
 exports.register = async (req, res) => {
     var token = null;
@@ -77,14 +78,34 @@ exports.getAllUsers = async (req, res) => {
     }
 };
 
-exports.logout = async (req, res) => {
-    try {
-        const token = req.header('Authorization').replace('Bearer ', '');
-        // احذف التوكن من قاعدة البيانات أو ضع منطقًا لتعطيله
-        await TokenBlacklist.create({ token });
+// exports.logout = async (req, res) => {
+//     try {
+//         const token = req.header('Authorization').replace('Bearer ', '');
+//         // احذف التوكن من قاعدة البيانات أو ضع منطقًا لتعطيله
+//         await TokenBlacklist.create({ token });
 
-        res.status(200).json({ message: 'User logged out successfully' });
-    } catch (error) {
-        res.status(500).json({ message: 'Error logging out', error: error.message });
+//         res.status(200).json({ message: 'User logged out successfully' });
+//     } catch (error) {
+//         res.status(500).json({ message: 'Error logging out', error: error.message });
+//     }
+// };
+
+// دالة لتسجيل الخروج
+exports.logout = async (req, res) => {
+    const token = req.header('Authorization').replace('Bearer ', '');
+  
+    if (!token) {
+      return res.status(400).json({ message: 'No token provided' });
     }
-};
+  
+    try {
+      // إضافة التوكن إلى القائمة السوداء
+      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+      const blacklist = new Blacklist({ token });
+      await blacklist.save();  // حفظ التوكن في قاعدة البيانات
+  
+      res.status(200).json({ message: 'Logged out successfully' });
+    } catch (error) {
+      res.status(500).json({ message: 'Error logging out', error: error.message });
+    }
+  };
