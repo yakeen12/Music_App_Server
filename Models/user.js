@@ -20,7 +20,7 @@ const userSchema = mongoose.Schema({
         },
     ], // Comments by the user
 
-
+    secretGifts: [{ type: mongoose.Schema.Types.ObjectId, ref: 'SecretGift' }], // إضافة القائمة الجديدة
 });
 const User = mongoose.model('User', userSchema);
 module.exports = User;
