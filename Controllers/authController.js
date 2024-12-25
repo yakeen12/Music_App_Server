@@ -55,8 +55,9 @@ exports.login = async (req, res) => {
 
     const user = await User.findOne({ email });
     if (!user) return res.status(400).json({ message: 'User not found' });
+    const hashedPassword = await bcrypt.hash(user.password, 10); // قوة التشفير 10 متوسط
 
-    const isMatch = await bcrypt.compare(password, user.password);
+    const isMatch = await bcrypt.compare(password, hashedPassword);
     if (!isMatch) return res.status(400).json({ message: 'Invalid password' });
 
 
