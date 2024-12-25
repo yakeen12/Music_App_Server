@@ -3,6 +3,8 @@ const Episode = require('../Models/episode');  // استيراد النموذج 
 
 // إضافة بودكاست جديد
 const createPodcast = async (req, res) => {
+    console.log("bodyyyyyyyyy:", req.body);  // طباعة البيانات للتأكد من وصولها
+
     try {
         const { title, host, genre, description } = req.body;
 
@@ -23,6 +25,8 @@ const createPodcast = async (req, res) => {
 
 // عرض جميع البودكاست
 const getAllPodcasts = async (req, res) => {
+    console.log("bodyyyyyyyyy:", req.body);  // طباعة البيانات للتأكد من وصولها
+
     try {
         const podcasts = await Podcast.find();  // الحصول على جميع البودكاست
         res.status(200).json(podcasts);
@@ -33,6 +37,8 @@ const getAllPodcasts = async (req, res) => {
 
 // عرض بودكاست معين بناءً على الـ ID
 const getPodcastById = async (req, res) => {
+    console.log("bodyyyyyyyyy:", req.body);  // طباعة البيانات للتأكد من وصولها
+
     try {
         const podcast = await Podcast.findById(req.params.id).populate('episodes');  // البحث عن البودكاست باستخدام الـ ID
         if (!podcast) {
@@ -46,6 +52,8 @@ const getPodcastById = async (req, res) => {
 
 // تحديث معلومات البودكاست
 const updatePodcast = async (req, res) => {
+    console.log("bodyyyyyyyyy:", req.body);  // طباعة البيانات للتأكد من وصولها
+
     try {
         const { title, host, genre, description } = req.body;
 

@@ -3,6 +3,8 @@ const User = require('../Models/user'); // إذا كنت تحتاج للتفاع
 const Artist = require('../Models/artist');
 // إضافة أغنية جديدة
 exports.addSong = async (req, res) => {
+    console.log("bodyyyyyyyyy:", req.body);  // طباعة البيانات للتأكد من وصولها
+
     const { title, artistId, genre, url } = req.body;
 
     try {
@@ -31,6 +33,8 @@ exports.addSong = async (req, res) => {
 
 // عرض جميع الأغاني
 exports.getAllSongs = async (req, res) => {
+    console.log("bodyyyyyyyyy:", req.body);  // طباعة البيانات للتأكد من وصولها
+
     try {
         const songs = await Song.find();  // العثور على جميع الأغاني
         res.status(200).json({ songs });
@@ -41,6 +45,8 @@ exports.getAllSongs = async (req, res) => {
 
 // البحث عن أغنية حسب العنوان أو الفنان
 exports.searchSongs = async (req, res) => {
+    console.log("bodyyyyyyyyy:", req.body);  // طباعة البيانات للتأكد من وصولها
+
     const { query } = req.query; // الحصول على الاستعلام من الـ URL
 
     try {
@@ -63,6 +69,8 @@ exports.searchSongs = async (req, res) => {
 
 // عرض تفاصيل أغنية معينة
 exports.getSongDetails = async (req, res) => {
+    console.log("bodyyyyyyyyy:", req.body);  // طباعة البيانات للتأكد من وصولها
+
     const { songId } = req.params;
 
     try {

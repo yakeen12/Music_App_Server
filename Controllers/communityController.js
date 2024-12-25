@@ -3,6 +3,8 @@ const User = require('../Models/user');  // لتحديث الأعضاء
 
 // إنشاء كوميونيتي جديدة
 exports.createCommunity = async (req, res) => {
+    console.log("bodyyyyyyyyy:", req.body);  // طباعة البيانات للتأكد من وصولها
+
     const { name, description } = req.body;
     const userId = req.userId; // يمكنك الحصول عليه من JWT أو الجلسة
 
@@ -17,6 +19,8 @@ exports.createCommunity = async (req, res) => {
 
 // الانضمام إلى كوميونيتي
 exports.joinCommunity = async (req, res) => {
+    console.log("bodyyyyyyyyy:", req.body);  // طباعة البيانات للتأكد من وصولها
+
     const { communityId } = req.body;
     const userId = req.userId; // من الجلسة أو JWT
 
@@ -40,6 +44,8 @@ exports.joinCommunity = async (req, res) => {
 
 // عرض جميع الكوميونيتيز
 exports.getAllCommunities = async (req, res) => {
+    console.log("bodyyyyyyyyy:", req.body);  // طباعة البيانات للتأكد من وصولها
+
     try {
         const communities = await Community.find().populate('creator', 'name'); // إظهار اسم المبدع
         res.status(200).json({ communities });
@@ -50,6 +56,8 @@ exports.getAllCommunities = async (req, res) => {
 
 // عرض تفاصيل كوميونيتي معينة
 exports.getCommunityDetails = async (req, res) => {
+    console.log("bodyyyyyyyyy:", req.body);  // طباعة البيانات للتأكد من وصولها
+
     const { communityId } = req.params;
 
     try {
@@ -69,6 +77,8 @@ exports.getCommunityDetails = async (req, res) => {
 
 // إضافة عضو إلى كوميونيتي (عادة يتم من خلال الانضمام ولكن إذا أردت إضافته يدويًا)
 exports.addMemberToCommunity = async (req, res) => {
+    console.log("bodyyyyyyyyy:", req.body);  // طباعة البيانات للتأكد من وصولها
+
     const { communityId, userId } = req.body;
 
     try {

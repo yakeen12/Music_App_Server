@@ -45,9 +45,12 @@ exports.register = async (req, res) => {
 }
 
 exports.login = async (req, res) => {
+
     if (!req.body) {
         return res.status(400).send('Body is empty!');
     }
+    console.log("bodyyyyyyyyy:", req.body);  // طباعة البيانات للتأكد من وصولها
+
     const { email, password } = req.body;
 
     const user = await User.findOne({ email });
@@ -63,6 +66,8 @@ exports.login = async (req, res) => {
 };
 
 exports.getAllUsers = async (req, res) => {
+    console.log("bodyyyyyyyyy:", req.body);  // طباعة البيانات للتأكد من وصولها
+
     try {
         const users = await User.find(); // استرجاع جميع المستخدمين
         res.status(200).json(users); // إرسال البيانات كرد JSON

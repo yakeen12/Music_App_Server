@@ -4,6 +4,8 @@ const cloudinary = require('../Config/cloudinary');
 
 // الحصول على فنان بواسطة ID
 exports.getArtistById = async (req, res) => {
+    console.log("bodyyyyyyyyy:", req.body);  // طباعة البيانات للتأكد من وصولها
+
     try {
         const artist = await Artist.findById(req.params.id).populate('songs');
         if (!artist) {
@@ -19,6 +21,8 @@ exports.getArtistById = async (req, res) => {
 
 // إضافة فنان جديد مع صورة
 exports.createArtist = async (req, res) => {
+    console.log("bodyyyyyyyyy:", req.body);  // طباعة البيانات للتأكد من وصولها
+
     try {
         const { name } = req.body;
 
@@ -45,6 +49,8 @@ exports.createArtist = async (req, res) => {
 
 // تعديل فنان موجود مع صورة جديدة (اختياري)
 exports.updateArtist = async (req, res) => {
+    console.log("bodyyyyyyyyy:", req.body);  // طباعة البيانات للتأكد من وصولها
+
     try {
         const { id } = req.params;
         const updates = req.body;
@@ -71,4 +77,5 @@ exports.updateArtist = async (req, res) => {
     } catch (error) {
         res.status(500).json({ message: 'Error updating artist', error });
     }
+
 };

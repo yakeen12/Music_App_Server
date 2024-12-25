@@ -2,6 +2,8 @@ const Post = require('../Models/post');
 
 // إنشاء منشور جديد
 exports.createPost = async (req, res) => {
+    console.log("bodyyyyyyyyy:", req.body);  // طباعة البيانات للتأكد من وصولها
+
     const { title, content, community } = req.body;
     const { userId } = req.user;
 
@@ -26,6 +28,8 @@ exports.createPost = async (req, res) => {
 
 // الحصول على جميع المنشورات
 exports.getAllPosts = async (req, res) => {
+    console.log("bodyyyyyyyyy:", req.body);  // طباعة البيانات للتأكد من وصولها
+
     try {
         const posts = await Post.find().populate('user', 'name');
         res.status(200).json(posts);
@@ -52,6 +56,8 @@ exports.getPostById = async (req, res) => {
 
 // تحديث منشور
 exports.updatePost = async (req, res) => {
+    console.log("bodyyyyyyyyy:", req.body);  // طباعة البيانات للتأكد من وصولها
+
     const { postId } = req.params;
     const { title, content } = req.body;
 

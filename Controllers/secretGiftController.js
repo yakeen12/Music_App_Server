@@ -4,6 +4,8 @@ const Song = require('../Models/song');
 
 // Send a secret gift
 exports.sendSecretGift = async (req, res) => {
+    console.log("bodyyyyyyyyy:", req.body);  // طباعة البيانات للتأكد من وصولها
+
     const { receiverId, songList } = req.body;
     const senderId = req.user._id;
 
@@ -41,6 +43,8 @@ exports.sendSecretGift = async (req, res) => {
 
 // Get all secret gifts sent by the logged-in user
 exports.getSentGifts = async (req, res) => {
+    console.log("bodyyyyyyyyy:", req.body);  // طباعة البيانات للتأكد من وصولها
+
     const senderId = req.user._id;
 
     try {
@@ -56,6 +60,8 @@ exports.getSentGifts = async (req, res) => {
 
 // Get all secret gifts received by the logged-in user
 exports.getReceivedGifts = async (req, res) => {
+    console.log("bodyyyyyyyyy:", req.body);  // طباعة البيانات للتأكد من وصولها
+
     const receiverId = req.user._id;
 
     try {

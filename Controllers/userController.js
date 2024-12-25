@@ -5,6 +5,8 @@ const jwt = require('jsonwebtoken'); // لإنشاء التوكين
 
 // الحصول على معلومات المستخدم
 exports.getUserProfile = async (req, res) => {
+    console.log("bodyyyyyyyyy:", req.body);  // طباعة البيانات للتأكد من وصولها
+
     try {
         const user = await User.findById(req.user.userId).select("-password");
         if (!user) {
@@ -18,6 +20,8 @@ exports.getUserProfile = async (req, res) => {
 
 // تعديل معلومات المستخدم
 exports.updateUserProfile = async (req, res) => {
+    console.log("bodyyyyyyyyy:", req.body);  // طباعة البيانات للتأكد من وصولها
+
     try {
         const userId = req.user.userId; // الحصول على ID المستخدم من التوكين
         const { name, email, password } = req.body;

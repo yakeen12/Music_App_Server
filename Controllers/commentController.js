@@ -3,6 +3,8 @@ const Post = require('../Models/post');
 
 // إضافة تعليق إلى منشور
 exports.addComment = async (req, res) => {
+    console.log("bodyyyyyyyyy:", req.body);  // طباعة البيانات للتأكد من وصولها
+
     const { postId } = req.params;
     const { text } = req.body;
     const { userId } = req.user;
@@ -35,6 +37,8 @@ exports.addComment = async (req, res) => {
 
 // الحصول على تعليقات منشور
 exports.getCommentsForPost = async (req, res) => {
+    console.log("bodyyyyyyyyy:", req.body);  // طباعة البيانات للتأكد من وصولها
+
     const { postId } = req.params;
 
     try {
