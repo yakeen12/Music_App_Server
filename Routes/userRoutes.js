@@ -4,10 +4,10 @@ const userController = require('../Controllers/userController');
 const authenticate = require('../MiddleWare/authenticate');  // استيراد الميدل وير للتحقق من التوكن
 
 // الحصول على ملف المستخدم
-router.get('/profile', authenticate, userController.getUserProfile);
+router.get('/getprofile', authenticate, userController.getUserProfile);
 
 // تحديث ملف المستخدم
-router.put('/profile', userController.updateUserProfile);
+router.put('/updateprofile', userController.updateUserProfile);
 
 
 module.exports = router;
