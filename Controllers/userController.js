@@ -3,18 +3,36 @@ const User = require('../Models/user'); // استيراد الموديل الخ�
 const jwt = require('jsonwebtoken'); // لإنشاء التوكين
 
 
-// الحصول على معلومات المستخدم
+// // الحصول على معلومات المستخدم
+// exports.getUserProfile = async (req, res) => {
+//     console.log("bodyyyyyyyyy:", req.body);  // طباعة البيانات للتأكد من وصولها
+
+//     try {
+//         const user = await User.findById(req.user.userId).select("-password");
+//         if (!user) {
+//             return res.status(404).json({ message: "User not found" });
+//         }
+//         res.status(200).json(user);
+//     } catch (error) {
+//         res.status(500).json({ message: "Error fetching user data", error });
+//     }
+// };
+
+// دالة للحصول على بيانات المستخدم باستخدام الـ userId
 exports.getUserProfile = async (req, res) => {
-    console.log("bodyyyyyyyyy:", req.body);  // طباعة البيانات للتأكد من وصولها
+    console.log("User ID from token:", req.user.userId);  // طباعة ID المستخدم من التوكن للتحقق
 
     try {
-        const user = await User.findById(req.user.userId).select("-password");
+        // الحصول على المستخدم بناءً على الـ userId من التوكن
+        const user = await User.findById(req.user.userId).select('-password');  // استبعاد كلمة المرور من النتائج
         if (!user) {
-            return res.status(404).json({ message: "User not found" });
+            return res.status(404).json({ message: 'User not found' });
         }
+        // إرجاع بيانات المستخدم
         res.status(200).json(user);
     } catch (error) {
-        res.status(500).json({ message: "Error fetching user data", error });
+        console.error(error);
+        res.status(500).json({ message: 'Error fetching user data', error });
     }
 };
 

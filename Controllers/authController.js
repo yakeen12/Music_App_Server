@@ -78,18 +78,6 @@ exports.getAllUsers = async (req, res) => {
     }
 };
 
-// exports.logout = async (req, res) => {
-//     try {
-//         const token = req.header('Authorization').replace('Bearer ', '');
-//         // احذف التوكن من قاعدة البيانات أو ضع منطقًا لتعطيله
-//         await TokenBlacklist.create({ token });
-
-//         res.status(200).json({ message: 'User logged out successfully' });
-//     } catch (error) {
-//         res.status(500).json({ message: 'Error logging out', error: error.message });
-//     }
-// };
-
 // دالة لتسجيل الخروج
 exports.logout = async (req, res) => {
     const token = req.header('Authorization').replace('Bearer ', '');
