@@ -10,4 +10,7 @@ router.post('/register', upload.single('profilePicture'), authController.registe
 router.post('/login', authController.login);
 
 router.get('/users', authController.getAllUsers); // تعريف المسار
+
+router.post('/logout', authController.logout);
+
 module.exports = router;

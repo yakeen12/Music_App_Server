@@ -13,7 +13,7 @@ exports.register = async (req, res) => {
     console.log("bodyyyyyyyyy:", req.body);  // طباعة البيانات للتأكد من وصولها
 
     const { username, email, password } = req.body;
-    const profilePicture = req.file ? req.file.path : 'example';
+    const profilePicture = req.file ? req.file.path : 'https://static.vecteezy.com/system/resources/previews/009/292/244/non_2x/default-avatar-icon-of-social-media-user-vector.jpg';
 
     const userExists = await User.findOne({ email });
     if (userExists) return res.status(400).json({ message: 'Email already exists' });
@@ -74,5 +74,17 @@ exports.getAllUsers = async (req, res) => {
         res.status(200).json(users); // إرسال البيانات كرد JSON
     } catch (err) {
         res.status(500).json({ message: 'Error retrieving users', error: err.message });
+    }
+};
+
+exports.logout = async (req, res) => {
+    try {
+        const token = req.header('Authorization').replace('Bearer ', '');
+        // احذف التوكن من قاعدة البيانات أو ضع منطقًا لتعطيله
+        await TokenBlacklist.create({ token });
+
+        res.status(200).json({ message: 'User logged out successfully' });
+    } catch (error) {
+        res.status(500).json({ message: 'Error logging out', error: error.message });
     }
 };
