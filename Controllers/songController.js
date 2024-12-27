@@ -36,7 +36,7 @@ exports.getAllSongs = async (req, res) => {
     console.log("bodyyyyyyyyy:", req.body);  // طباعة البيانات للتأكد من وصولها
 
     try {
-        const songs = await Song.find();  // العثور على جميع الأغاني
+        const songs = await Song.find().populate('artist', 'name');  // العثور على جميع الأغاني
         res.status(200).json({ songs });
     } catch (error) {
         res.status(500).json({ message: 'Error fetching songs', error });

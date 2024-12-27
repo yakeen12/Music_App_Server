@@ -5,6 +5,7 @@ const songSchema = new mongoose.Schema({
     artist: { type: mongoose.Schema.Types.ObjectId, ref: 'Artist', required: true }, // مرجع للفنان
     genre: { type: String }, // نوع الأغنية مثل (Pop, Rock, Hip-hop)
     url: { type: String, required: true }, // رابط الأغنية الصوتية
+    img: { type: String, required: true }, // رابط الأغنية الصوتية
     likes: [
         { type: mongoose.Schema.Types.ObjectId, ref: 'User' } // المستخدمون الذين أعجبوا بالأغنية
     ],
