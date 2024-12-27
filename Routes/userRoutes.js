@@ -7,7 +7,7 @@ const authenticate = require('../MiddleWare/authenticate');  // استيراد �
 router.get('/getprofile', authenticate, userController.getUserProfile);
 
 // تحديث ملف المستخدم
-router.put('/updateprofile', userController.updateUserProfile);
+router.put('/updateprofile', authenticate, userController.updateUserProfile);
 
 
 module.exports = router;
