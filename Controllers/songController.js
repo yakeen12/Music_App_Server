@@ -5,7 +5,7 @@ const Artist = require('../Models/artist');
 exports.addSong = async (req, res) => {
     console.log("bodyyyyyyyyy:", req.body);  // طباعة البيانات للتأكد من وصولها
 
-    const { title, artistId, genre, url } = req.body;
+    const { title, artistId, genre, url, img } = req.body;
 
     try {
         const artist = await Artist.findById(artistId);
@@ -18,7 +18,8 @@ exports.addSong = async (req, res) => {
             title,
             artist: artistId,
             genre,
-            url,  // هذا سيشير إلى رابط أو مسار الملف الصوتي
+            url,
+            img  // هذا سيشير إلى رابط أو مسار الملف الصوتي
         });
 
         await newSong.save();
