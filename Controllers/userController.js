@@ -59,7 +59,9 @@ exports.getLikedSongs = async (req, res) => {
     console.log("getLikedSongs");
     try {
         const userId = req.user.id;
-        const user = await User.findById(userId).populate('likes');
+        const user = await User.findById(userId);
+        console.log(user);
+
         if (!user) return res.status(404).json({ message: 'User not found' });
 
         res.json({ likedSongs: user.likedSongs });
