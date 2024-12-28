@@ -71,11 +71,17 @@ exports.getLikedSongs = async (req, res) => {
 };
 
 exports.toggleLikeSong = async (req, res) => {
+    console.log("toggleLikeSong");
+    console.log("bodyyyyyyyyy:", req.body);  // طباعة البيانات للتأكد من وصولها
+
+
     try {
 
         const { songId, like } = req.body;
 
         const user = await User.findById(req.user.id);
+        console.log("user", user);
+
         if (!user) return res.status(404).json({ message: 'User not found' });
 
         if (like) {
