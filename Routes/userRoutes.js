@@ -10,9 +10,9 @@ router.get('/getprofile', authenticate, userController.getUserProfile);
 router.put('/updateprofile', authenticate, userController.updateUserProfile);
 
 // استرجاع الأغاني المفضلة
-router.get('/likes', authMiddleware, userController.getLikedSongs);
+router.get('/likes', authenticate, userController.getLikedSongs);
 
 // تفعيل أو إلغاء اللايك
-router.post('/like', authMiddleware, userController.toggleLikeSong);
+router.post('/like', authenticate, userController.toggleLikeSong);
 
 module.exports = router;
