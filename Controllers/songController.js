@@ -125,7 +125,7 @@ exports.addLike = async (req, res) => {
 exports.getLatestSongs = async (req, res) => {
     try {
         console.log('Fetching latest songs...');
-        const songs = await Song.find().sort({ createdAt: -1 });
+        const songs = await Song.find().sort({ createdAt: -1 }).populate('artist', 'name').limit(10);
         console.log('Songs found:', songs);
 
         if (songs.length === 0) {
