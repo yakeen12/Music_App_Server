@@ -124,12 +124,17 @@ exports.addLike = async (req, res) => {
 // GET: استرجاع أحدث 10 أغاني
 exports.getLatestSongs = async (req, res) => {
     try {
-        const songs = await Song.find()
-            .sort({ createdAt: -1 }) // ترتيب تنازلي بناءً على وقت الإنشاء
-            .limit(10); // تحديد عدد النتائج إلى 10
-        console.log(songs);
+        console.log('Fetching latest songs...');
+        const songs = await Song.find().sort({ createdAt: -1 });
+        console.log('Songs found:', songs);
+
+        if (songs.length === 0) {
+            return res.status(404).json({ message: 'Song not found' });
+        }
+
         res.json({ songs });
     } catch (error) {
+        console.error('Error fetching songs:', error);
         res.status(500).json({ message: 'Error fetching latest songs', error });
     }
 };
