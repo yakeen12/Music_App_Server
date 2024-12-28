@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const authenticate = require('../MiddleWare/authenticate');  // استيراد الميدل وير للتحقق من التوكن
 const podcastController = require('../Controllers/podcastController');
 
 // الحصول على جميع البودكاست

@@ -1,4 +1,5 @@
 const express = require('express');
+const authenticate = require('../MiddleWare/authenticate');  // استيراد الميدل وير للتحقق من التوكن
 const router = express.Router();
 const Post = require('../Controllers/postController');
 

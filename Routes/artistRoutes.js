@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 // const { getArtistById } = require('../Controllers/artistController');
 const upload = require('../MiddleWare/multer'); // Multer middleware لتحميل الصور
+const authenticate = require('../MiddleWare/authenticate');  // استيراد الميدل وير للتحقق من التوكن
 const { createArtist, updateArtist, getArtistById } = require('../Controllers/artistController');
 
 // إنشاء فنان جديد
