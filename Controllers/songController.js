@@ -127,7 +127,7 @@ exports.getLatestSongs = async (req, res) => {
         const songs = await Song.find()
             .sort({ createdAt: -1 }) // ترتيب تنازلي بناءً على وقت الإنشاء
             .limit(10); // تحديد عدد النتائج إلى 10
-
+        console.log(songs);
         res.json({ songs });
     } catch (error) {
         res.status(500).json({ message: 'Error fetching latest songs', error });
