@@ -11,7 +11,7 @@ router.post('/', songController.addSong);
 
 router.get('/:id', songController.getSongDetails);
 
-router.get('/latest', getLatestSongs);
+router.get('/latest', songController.getLatestSongs);
 
 
 // حذف أغنية
