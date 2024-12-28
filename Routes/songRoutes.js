@@ -10,6 +10,8 @@ router.post('/', songController.addSong);
 
 router.get('/:id', songController.getSongDetails);
 
+router.get('/latest', getLatestSongs);
+
 
 // حذف أغنية
 // router.delete('/:id', songController.deleteSong);

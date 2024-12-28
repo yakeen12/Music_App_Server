@@ -9,7 +9,7 @@ const songSchema = new mongoose.Schema({
     likes: [
         { type: mongoose.Schema.Types.ObjectId, ref: 'User' } // المستخدمون الذين أعجبوا بالأغنية
     ],
-});
+}, { timestamps: true });
 
 const Song = mongoose.model('Song', songSchema);
 

@@ -119,3 +119,17 @@ exports.addLike = async (req, res) => {
         res.status(500).json({ message: 'Error liking song', error });
     }
 };
+
+
+// GET: استرجاع أحدث 10 أغاني
+exports.getLatestSongs = async (req, res) => {
+    try {
+        const songs = await Song.find()
+            .sort({ createdAt: -1 }) // ترتيب تنازلي بناءً على وقت الإنشاء
+            .limit(10); // تحديد عدد النتائج إلى 10
+
+        res.json({ songs });
+    } catch (error) {
+        res.status(500).json({ message: 'Error fetching latest songs', error });
+    }
+};
