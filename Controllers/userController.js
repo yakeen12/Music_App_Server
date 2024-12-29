@@ -90,8 +90,8 @@ exports.toggleLikeSong = async (req, res) => {
 
         if (like) {
             // إضافة الأغنية إذا لم تكن موجودة
-            if (!user.likes.includes(songId)) {
-                user.likes.push(songId);
+            if (!user.likedSongs.includes(songId)) {
+                user.likedSongs.push(songId);
             }
         } else {
             // إزالة الأغنية إذا كانت موجودة
