@@ -60,7 +60,10 @@ exports.getLikedSongs = async (req, res) => {
     console.log("getLikedSongs");
     try {
 
-        const user = await User.findById(req.user.userId);
+        const user = await User.findById(req.user.userId).populate({
+            path: 'likedSongs',
+            populate: { path: 'artist', select: 'name' } // جلب اسم الفنان;   
+        });
         console.log("user", user);
 
         if (!user) return res.status(404).json({ message: 'User not found' });
@@ -78,7 +81,10 @@ exports.toggleLikeSong = async (req, res) => {
 
     try {
 
-        const user = await User.findById(req.user.userId);
+        const user = await User.findById(req.user.userId).populate({
+            path: 'likedSongs',
+            populate: { path: 'artist', select: 'name' } // جلب اسم الفنان;   
+        });
         console.log("user", user);
 
         if (!user) return res.status(404).json({ message: 'toggleLikeSong User not found' });
