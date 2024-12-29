@@ -1,3 +1,4 @@
+const Song = require('../Models/song');
 const User = require('../Models/user'); // استيراد الموديل الخاص بالمستخدم
 // const bcrypt = require('bcrypt'); // لتشفير كلمات المرورs
 const jwt = require('jsonwebtoken'); // لإنشاء التوكين
