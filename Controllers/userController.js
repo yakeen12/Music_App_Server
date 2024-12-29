@@ -80,7 +80,7 @@ exports.toggleLikeSong = async (req, res) => {
         const { songId, like } = req.body;
 
         const user = await User.findById(req.user.id);
-        console.log("user", user);
+        console.log("user", req.user.id);
 
         if (!user) return res.status(404).json({ message: 'toggleLikeSong User not found' });
 
