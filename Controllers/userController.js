@@ -88,19 +88,30 @@ exports.toggleLikeSong = async (req, res) => {
 
 
 
+        // التحقق من وجود الأغنية
+        const song = await Song.findById(songId);
+        if (!song) return res.status(404).json({ message: 'Song not found' });
+
         if (like) {
             // إضافة الأغنية إذا لم تكن موجودة
-            if (!user.likedSongs.includes(songId)) {
+            if (!user.likedSongs.some((likedSong) => likedSong._id.toString() === songId)) {
                 user.likedSongs.push(songId);
+                if (!song.likes.includes(userId)) {
+                    song.likes.push(userId); // إضافة المستخدم لقائمة الإعجابات في الأغنية
+                }
             }
         } else {
             // إزالة الأغنية إذا كانت موجودة
             user.likedSongs = user.likedSongs.filter(
-                (id) => id.toString() !== songId
+                (likedSong) => likedSong._id.toString() !== songId
             );
+            song.likes = song.likes.filter((id) => id.toString() !== userId); // إزالة المستخدم من قائمة الإعجابات
         }
 
+        // حفظ التعديلات
         await user.save();
+        await song.save();
+
         res.json({ success: true, likedSongs: user.likedSongs });
     } catch (error) {
         res.status(500).json({ message: 'Error toggling like', error });
