@@ -97,8 +97,8 @@ exports.toggleLikeSong = async (req, res) => {
             // إضافة الأغنية إذا لم تكن موجودة
             if (!user.likedSongs.some((likedSong) => likedSong._id.toString() === songId)) {
                 user.likedSongs.push(songId);
-                if (!song.likes.includes(userId)) {
-                    song.likes.push(userId); // إضافة المستخدم لقائمة الإعجابات في الأغنية
+                if (!song.likes.includes(req.user.userId)) {
+                    song.likes.push(req.user.userId); // إضافة المستخدم لقائمة الإعجابات في الأغنية
                 }
             }
         } else {
@@ -106,7 +106,7 @@ exports.toggleLikeSong = async (req, res) => {
             user.likedSongs = user.likedSongs.filter(
                 (likedSong) => likedSong._id.toString() !== songId
             );
-            song.likes = song.likes.filter((id) => id.toString() !== userId); // إزالة المستخدم من قائمة الإعجابات
+            song.likes = song.likes.filter((id) => id.toString() !== req.user.userId); // إزالة المستخدم من قائمة الإعجابات
         }
 
         // حفظ التعديلات
