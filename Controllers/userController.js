@@ -77,12 +77,16 @@ exports.toggleLikeSong = async (req, res) => {
 
     try {
 
-        const { songId, like } = req.body;
-
-        const user = await User.findById(req.user.id);
-        console.log("user", req.user.id);
+        const user = await User.findById(req.user.userId);
+        console.log("user", user);
 
         if (!user) return res.status(404).json({ message: 'toggleLikeSong User not found' });
+
+        console.log("user", req.user.id);
+
+        const { songId, like } = req.body;
+
+
 
         if (like) {
             // إضافة الأغنية إذا لم تكن موجودة
