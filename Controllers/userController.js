@@ -81,10 +81,7 @@ exports.toggleLikeSong = async (req, res) => {
 
     try {
 
-        const user = await User.findById(req.user.userId).populate({
-            path: 'likedSongs',
-            populate: { path: 'artist', select: 'name' } // جلب اسم الفنان;   
-        });
+        const user = await User.findById(req.user.userId).populate('likedSongs');
         console.log("user", user);
 
         if (!user) return res.status(404).json({ message: 'toggleLikeSong User not found' });
@@ -119,7 +116,13 @@ exports.toggleLikeSong = async (req, res) => {
         await user.save();
         await song.save();
 
-        res.json({ success: true, likedSongs: user.likedSongs });
+        // جلب قائمة الأغاني المعجبة مرة أخرى مع التفاصيل
+        const updatedUser = await User.findById(req.user.userId).populate({
+            path: 'likedSongs',
+            populate: { path: 'artist', select: 'name' } // جلب اسم الفنان
+        });
+
+        res.json({ success: true, likedSongs: updatedUser.likedSongs });
     } catch (error) {
         res.status(500).json({ message: 'Error toggling like', error });
     }
