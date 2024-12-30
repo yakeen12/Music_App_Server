@@ -28,11 +28,11 @@ exports.getUserPlaylists = async (req, res) => {
 
     try {
 
-        const playlists = await Playlist.find({ createdBy: req.user.userId });
-        // .populate({
-        //     path: 'songs',
-        //     populate: { path: 'artist', select: 'name' } // جلب اسم الفنان فقط
-        // });
+        const playlists = await Playlist.find({ createdBy: req.user.userId }).populate({
+            path: 'songs',
+            populate: { path: 'artist', }
+        });
+        console.log("getUserPlaylists playlists", playlists);
 
         if (!playlists) return res.status(404).json({ message: ' no playlists found' });
         res.json(playlists);
@@ -63,10 +63,9 @@ exports.updatePlaylist = async (req, res) => {
 
         await playlist.save();
 
-        // جلب قائمة الأغاني المعجبة مرة أخرى مع التفاصيل
         const updatedPlayList = await Playlist.find({ createdBy: req.user.id }).populate({
             path: 'songs',
-            populate: { path: 'artist', select: 'name' } // جلب اسم الفنان فقط
+            populate: { path: 'artist' }
         });
 
         res.json(updatedPlayList);
