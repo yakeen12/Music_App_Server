@@ -4,12 +4,13 @@ const { authenticateUser } = require('../MiddleWare/authenticate'); // التح�
 
 const playListsController = require('../Controllers/playListsController');
 
+console.log('playListsController:', playListsController);
 
 // إضافة أغنية للبلاي ليست
-router.put('/:id/add-song', authenticateUser, playListsController.addSongToPlaylist);
+router.post('/:id/add-song', authenticateUser, playListsController.addSongToPlaylist);
 
 // حذف أغنية من البلاي ليست
-router.put('/:id/remove-song', authenticateUser, playListsController.removeSongFromPlaylist);
+router.post('/:id/remove-song', authenticateUser, playListsController.removeSongFromPlaylist);
 
 
 // جلب البلاي ليستات العامة الخاصة بيوزر معين
@@ -25,7 +26,7 @@ router.delete('/delete', authenticateUser, playListsController.deletePlaylist);
 
 
 // تحديث بلاي ليست
-router.put('/:id', authenticateUser, playListsController.updatePlaylist);
+router.post('/:id', authenticateUser, playListsController.updatePlaylist);
 
 // جلب بلاي ليستات اليوزر
 router.get('/', authenticateUser, playListsController.getUserPlaylists);
