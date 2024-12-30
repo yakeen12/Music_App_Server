@@ -33,10 +33,14 @@ exports.getUserPlaylists = async (req, res) => {
             populate: { path: 'artist', }
         });
         console.log("getUserPlaylists playlists", playlists);
+        if (!playlists || playlists.length === 0) {
+            return res.status(404).json({ message: 'No playlists found for this user' });
+        }
 
-        if (!playlists) return res.status(404).json({ message: ' no playlists found' });
         res.json(playlists);
     } catch (error) {
+        console.log("getUserPlaylists error", error);
+
         res.status(500).json({ message: 'Error fetching playlists', error });
     }
 };
