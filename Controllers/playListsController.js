@@ -40,7 +40,7 @@ exports.getUserPlaylists = async (req, res) => {
         // console.log("getUserPlaylists playlists", playlists);
         const playlists = await Playlist.aggregate([
             {
-                $match: { createdBy: mongoose.Types.ObjectId(req.user.userId) }
+                $match: { "createdBy": mongoose.Types.ObjectId(req.user.userId) }
             },
             {
                 $lookup: {
