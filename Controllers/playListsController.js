@@ -31,16 +31,58 @@ exports.getUserPlaylists = async (req, res) => {
 
     try {
 
-        const playlists = await Playlist.find({ createdBy: req.user.userId }).populate({
-            path: 'songs',
-            populate: { path: 'artist', select: 'name' }
-        }).exec((err, playlist) => {
-            if (err) {
-                console.error('Error retrieving playlist:', err);
-                return;
+        // const playlists = await Playlist.find({ createdBy: req.user.userId }).populate({
+        //     path: 'songs',
+        //     populate: { path: 'artist', select: 'name' }
+        // });
+        // console.log("getUserPlaylists playlists", playlists);
+        const playlists = await Playlist.aggregate([
+            {
+                $match: { createdBy: mongoose.Types.ObjectId(req.user.userId) }
+            },
+            {
+                $lookup: {
+                    from: 'songs', // اسم مجموعة الأغاني
+                    localField: 'songs', // الحقل في مجموعة البلاي ليست
+                    foreignField: '_id', // الحقل في مجموعة الأغاني
+                    as: 'songsDetails' // اسم الحقل الناتج الذي سيحتوي على البيانات
+                }
+            },
+            {
+                $unwind: {
+                    path: '$songsDetails',
+                    preserveNullAndEmptyArrays: true // لضمان عدم تجاهل البلاي ليستات الفارغة
+                }
+            },
+            {
+                $lookup: {
+                    from: 'artists', // اسم مجموعة الفنانين
+                    localField: 'songsDetails.artist', // الحقل في مجموعة الأغاني
+                    foreignField: '_id', // الحقل في مجموعة الفنانين
+                    as: 'songsDetails.artistDetails' // اسم الحقل الناتج
+                }
+            },
+            {
+                $group: {
+                    _id: '$_id', // تجميع الأغاني بالبلاي ليست
+                    name: { $first: '$name' },
+                    isPublic: { $first: '$isPublic' },
+                    allowEditing: { $first: '$allowEditing' },
+                    createdBy: { $first: '$createdBy' },
+                    songs: {
+                        $push: {
+                            title: '$songsDetails.title',
+                            genre: '$songsDetails.genre',
+                            url: '$songsDetails.url',
+                            img: '$songsDetails.img',
+                            artist: { $arrayElemAt: ['$songsDetails.artistDetails', 0] } // أخذ الفنان الأول
+                        }
+                    }
+                }
             }
-        });
-        console.log("getUserPlaylists playlists", playlists);
+        ]);
+
+        console.log("Playlists with aggregated data:", playlists);
         if (!playlists || playlists.length === 0) {
             return res.status(404).json({ message: 'No playlists found for this user' });
         }
