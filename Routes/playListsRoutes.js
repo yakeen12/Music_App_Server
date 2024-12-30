@@ -13,10 +13,10 @@ const {
 
 
 // إضافة أغنية للبلاي ليست
-router.put('/:id/add-song', addSongToPlaylist);
+router.put('/:id/add-song',authenticateUser, addSongToPlaylist);
 
 // حذف أغنية من البلاي ليست
-router.put('/:id/remove-song', removeSongFromPlaylist);
+router.put('/:id/remove-song', authenticateUser,removeSongFromPlaylist);
 
 
 // جلب البلاي ليستات العامة الخاصة بيوزر معين
