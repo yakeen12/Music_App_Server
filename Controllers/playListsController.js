@@ -23,11 +23,14 @@ exports.createPlaylist = async (req, res) => {
 // جلب بلاي ليستات اليوزر
 // هاي لصفحة البلاي ليست في النافيقيشن بار تبع اليوزر
 exports.getUserPlaylists = async (req, res) => {
+    console.log("getUserPlaylists", req.user.id)
     try {
-        const playlists = await Playlist.find({ createdBy: req.user.id }).populate({
-            path: 'songs',
-            populate: { path: 'artist', select: 'name' } // جلب اسم الفنان فقط
-        });
+
+        const playlists = await Playlist.find({ createdBy: req.user.id });
+        // .populate({
+        //     path: 'songs',
+        //     populate: { path: 'artist', select: 'name' } // جلب اسم الفنان فقط
+        // });
 
         if (!playlists) return res.status(404).json({ message: ' no playlists found' });
         res.json(playlists);
