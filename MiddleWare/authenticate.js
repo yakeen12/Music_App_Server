@@ -6,6 +6,7 @@ const authenticate = (req, res, next) => {
 
     // التحقق من وجود التوكن
     if (!token) {
+        console.log('No token provided');
         return res.status(401).json({ message: 'Access denied. No token provided.' });
     }
 
@@ -15,6 +16,8 @@ const authenticate = (req, res, next) => {
         req.user = decoded;  // إضافة بيانات المستخدم إلى الـ request
         next();  // السماح بالمتابعة إلى المسار التالي
     } catch (error) {
+        console.log('Invalid token.');
+
         res.status(400).json({ message: 'Invalid token.' });  // إذا كانت التوكن غير صالحة
     }
 };
