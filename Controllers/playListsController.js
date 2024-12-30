@@ -28,6 +28,8 @@ exports.getUserPlaylists = async (req, res) => {
             path: 'songs',
             populate: { path: 'artist', select: 'name' } // جلب اسم الفنان فقط
         });
+
+        if (!playlists) return res.status(404).json({ message: ' no playlists found' });
         res.json(playlists);
     } catch (error) {
         res.status(500).json({ message: 'Error fetching playlists', error });
