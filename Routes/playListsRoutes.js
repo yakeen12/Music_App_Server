@@ -6,12 +6,6 @@ const playListsController = require('../Controllers/playListsController');
 
 console.log('playListsController:', playListsController);
 
-// إضافة أغنية للبلاي ليست
-router.post('/:id/add-song', authenticateUser, playListsController.addSongToPlaylist);
-
-// حذف أغنية من البلاي ليست
-router.post('/:id/remove-song', authenticateUser, playListsController.removeSongFromPlaylist);
-
 
 // جلب البلاي ليستات العامة الخاصة بيوزر معين
 router.get('/public/:userId', playListsController.getPublicPlaylists);
@@ -24,9 +18,15 @@ router.post('/create', authenticateUser, playListsController.createPlaylist);
 router.delete('/delete', authenticateUser, playListsController.deletePlaylist);
 
 
+// إضافة أغنية للبلاي ليست
+router.put('/:id/add-song', authenticateUser, playListsController.addSongToPlaylist);
+
+// حذف أغنية من البلاي ليست
+router.put('/:id/remove-song', authenticateUser, playListsController.removeSongFromPlaylist);
+
 
 // تحديث بلاي ليست
-router.post('/:id', authenticateUser, playListsController.updatePlaylist);
+router.put('/:id', authenticateUser, playListsController.updatePlaylist);
 
 // جلب بلاي ليستات اليوزر
 router.get('/', authenticateUser, playListsController.getUserPlaylists);
