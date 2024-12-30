@@ -26,7 +26,10 @@ const getUserPlaylists = async (req, res) => {
         const playlists = await Playlist.find({ createdBy: req.user.id }).populate({
             path: 'songs',
             populate: { path: 'artist', select: 'name' } // جلب اسم الفنان فقط
-        });
+        }).populate({
+            path: 'createdBy',
+            select: 'username profileImage'  // جلب اسم وصورة اليوزر
+        });;
         res.json(playlists);
     } catch (error) {
         res.status(500).json({ message: 'Error fetching playlists', error });
@@ -158,7 +161,7 @@ const removeSongFromPlaylist = async (req, res) => {
 // بتضيف اغنية وحدة
 const addSongToPlaylist = async (req, res) => {
     const { id } = req.params;
-    const { songId } = req.body; 
+    const { songId } = req.body;
 
     try {
         const playlist = await Playlist.findById(id);
