@@ -116,6 +116,82 @@ const deletePlaylist = async (req, res) => {
     }
 };
 
+// بتحذف اغنية وحدة 
+const removeSongFromPlaylist = async (req, res) => {
+    const { id } = req.params; // البلاي ليست المطلوبة
+    const { songId } = req.body; // الأغنية التي سيتم حذفها
+
+    try {
+        const playlist = await Playlist.findById(id);
+
+        if (!playlist) {
+            return res.status(404).json({ message: 'Playlist not found' });
+        }
+
+        // التأكد من أن اليوزر هو الذي أنشأ البلاي ليست أو أنه مسموح له بالتعديل
+        if (playlist.createdBy.toString() !== req.user.id && !playlist.allowEditing) {
+            return res.status(403).json({ message: 'Not allowed to edit this playlist' });
+        }
+
+        playlist.songs.pull(songId);
+
+        await playlist.save();
+
+        const updatedPlaylist = await Playlist.findById(id)
+            .populate({
+                path: 'songs',
+                populate: {
+                    path: 'artist',
+                    select: 'name'
+                }
+            });
+
+        res.json(updatedPlaylist);
+    } catch (error) {
+        res.status(500).json({ message: 'Error removing song from playlist', error });
+    }
+};
+
+
+
+
+// بتضيف اغنية وحدة
+const addSongToPlaylist = async (req, res) => {
+    const { id } = req.params;
+    const { songId } = req.body; 
+
+    try {
+        const playlist = await Playlist.findById(id);
+
+        if (!playlist) {
+            return res.status(404).json({ message: 'Playlist not found' });
+        }
+
+        // التأكد من أن اليوزر هو الذي أنشأ البلاي ليست أو أنه مسموح له بالتعديل
+        if (playlist.createdBy.toString() !== req.user.id && !playlist.allowEditing) {
+            return res.status(403).json({ message: 'Not allowed to edit this playlist' });
+        }
+
+        playlist.songs.push(songId);
+
+        await playlist.save();
+
+        const updatedPlaylist = await Playlist.findById(id)
+            .populate({
+                path: 'songs',
+                populate: {
+                    path: 'artist',
+                    select: 'name'
+                }
+            });
+
+        res.json(updatedPlaylist);
+    } catch (error) {
+        res.status(500).json({ message: 'Error adding song to playlist', error });
+    }
+};
+
+
 
 module.exports = {
     createPlaylist,
@@ -123,4 +199,6 @@ module.exports = {
     getPublicPlaylists,
     updatePlaylist,
     deletePlaylist,
+    addSongToPlaylist,
+    removeSongFromPlaylist
 };
