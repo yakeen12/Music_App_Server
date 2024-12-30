@@ -189,21 +189,28 @@ exports.addSongToPlaylist = async (req, res) => {
     const { id } = req.params;
     const { songId } = req.body;
 
+    console.log("id playlist ", id);
+    console.log("songId", songId);
     try {
         const playlist = await Playlist.findById(id);
 
         if (!playlist) {
+            console.log("Playlist not found");
+
             return res.status(404).json({ message: 'Playlist not found' });
         }
 
         // التأكد من أن اليوزر هو الذي أنشأ البلاي ليست أو أنه مسموح له بالتعديل
         if (playlist.createdBy.toString() !== req.user.id && !playlist.allowEditing) {
+            console.log('Not allowed to edit this playlist');
+
             return res.status(403).json({ message: 'Not allowed to edit this playlist' });
         }
 
         playlist.songs.push(songId);
 
         await playlist.save();
+        console.log("Saved");
 
         const updatedPlaylist = await Playlist.findById(id)
             .populate({
