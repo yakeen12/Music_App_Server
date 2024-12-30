@@ -196,13 +196,3 @@ exports.addSongToPlaylist = async (req, res) => {
 };
 
 
-
-module.exports = {
-    createPlaylist,
-    getUserPlaylists,
-    getPublicPlaylists,
-    updatePlaylist,
-    deletePlaylist,
-    addSongToPlaylist,
-    removeSongFromPlaylist
-};
