@@ -5,12 +5,14 @@ const User = require('../Models/user');
 exports.createPlaylist = async (req, res) => {
     const { name, isPublic = true, allowEditing = false } = req.body;
 
+    console.log("createPlaylist", req.user.userId);
+    console.log("createPlaylist req.user", req.user);
     try {
         const playlist = new Playlist({
             name,
             isPublic,
             allowEditing,
-            createdBy: req.user.id,
+            createdBy: req.user.userId,
         });
 
         await playlist.save();
@@ -47,6 +49,8 @@ exports.getUserPlaylists = async (req, res) => {
 };
 
 exports.updatePlaylist = async (req, res) => {
+    console.log("updatePlaylist", req.user.userId);
+    console.log("updatePlaylist req.user", req.user);
     const { id } = req.params;
     const { songs, name, isPublic, allowEditing } = req.body;
 
@@ -106,6 +110,8 @@ exports.getPublicPlaylists = async (req, res) => {
 
 
 exports.deletePlaylist = async (req, res) => {
+    console.log("deletePlaylist", req.user.userId);
+    console.log("deletePlaylist req.user", req.user);
     const { playlistId } = req.body;
 
     if (!playlistId) {
@@ -136,6 +142,8 @@ exports.deletePlaylist = async (req, res) => {
 
 // بتحذف اغنية وحدة 
 exports.removeSongFromPlaylist = async (req, res) => {
+    console.log("removeSongFromPlaylist", req.user.userId);
+    console.log("removeSongFromPlaylist req.user", req.user);
     const { id } = req.params; // البلاي ليست المطلوبة
     const { songId } = req.body; // الأغنية التي سيتم حذفها
 
@@ -176,6 +184,8 @@ exports.removeSongFromPlaylist = async (req, res) => {
 
 // بتضيف اغنية وحدة
 exports.addSongToPlaylist = async (req, res) => {
+    console.log("addSongToPlaylist", req.user.userId);
+    console.log("addSongToPlaylist req.user", req.user);
     const { id } = req.params;
     const { songId } = req.body;
 
