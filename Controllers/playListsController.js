@@ -200,6 +200,7 @@ exports.addSongToPlaylist = async (req, res) => {
             return res.status(404).json({ message: 'Playlist not found' });
         }
 
+        console.log("playlist.createdBy.toString() !== req.user.id", playlist.createdBy.toString(), req.user.id, playlist.createdBy.toString() !== req.user.id,)
         // التأكد من أن اليوزر هو الذي أنشأ البلاي ليست أو أنه مسموح له بالتعديل
         if (playlist.createdBy.toString() !== req.user.id && !playlist.allowEditing) {
             console.log('Not allowed to edit this playlist');
