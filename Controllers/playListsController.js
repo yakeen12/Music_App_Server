@@ -31,12 +31,15 @@ exports.getUserPlaylists = async (req, res) => {
 
     try {
 
-        const playlists = await Playlist.find({ createdBy: req.user.userId }).populate('songs');
-
-        // .populate({
-        //     path: 'songs',
-        //     populate: { path: 'artist', select: 'name' }
-        // });
+        const playlists = await Playlist.find({ createdBy: req.user.userId }).populate({
+            path: 'songs',
+            populate: { path: 'artist', select: 'name' }
+        }).exec((err, playlist) => {
+            if (err) {
+                console.error('Error retrieving playlist:', err);
+                return;
+            }
+        });
         console.log("getUserPlaylists playlists", playlists);
         if (!playlists || playlists.length === 0) {
             return res.status(404).json({ message: 'No playlists found for this user' });
