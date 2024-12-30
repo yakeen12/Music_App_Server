@@ -2,7 +2,7 @@ const Playlist = require('../Models/playLists');
 const User = require('../Models/user');
 
 // إنشاء بلاي ليست جديدة
-const createPlaylist = async (req, res) => {
+exports.createPlaylist = async (req, res) => {
     const { name, isPublic = true, allowEditing = false } = req.body;
 
     try {
@@ -22,7 +22,7 @@ const createPlaylist = async (req, res) => {
 
 // جلب بلاي ليستات اليوزر
 // هاي لصفحة البلاي ليست في النافيقيشن بار تبع اليوزر
-const getUserPlaylists = async (req, res) => {
+exports.getUserPlaylists = async (req, res) => {
     try {
         const playlists = await Playlist.find({ createdBy: req.user.id }).populate({
             path: 'songs',
@@ -34,7 +34,7 @@ const getUserPlaylists = async (req, res) => {
     }
 };
 
-const updatePlaylist = async (req, res) => {
+exports.updatePlaylist = async (req, res) => {
     const { id } = req.params;
     const { songs, name, isPublic, allowEditing } = req.body;
 
@@ -69,7 +69,7 @@ const updatePlaylist = async (req, res) => {
 };
 
 // هاي لصفحة البلاي ليست اللي بتبين ليوزر خارجي
-const getPublicPlaylists = async (req, res) => {
+exports.getPublicPlaylists = async (req, res) => {
     const { userId } = req.params; // جلب userId من المسار
 
     try {
@@ -92,7 +92,7 @@ const getPublicPlaylists = async (req, res) => {
 };
 
 
-const deletePlaylist = async (req, res) => {
+exports.deletePlaylist = async (req, res) => {
     const { playlistId } = req.body;
 
     if (!playlistId) {
@@ -121,7 +121,7 @@ const deletePlaylist = async (req, res) => {
 };
 
 // بتحذف اغنية وحدة 
-const removeSongFromPlaylist = async (req, res) => {
+exports.removeSongFromPlaylist = async (req, res) => {
     const { id } = req.params; // البلاي ليست المطلوبة
     const { songId } = req.body; // الأغنية التي سيتم حذفها
 
@@ -160,7 +160,7 @@ const removeSongFromPlaylist = async (req, res) => {
 
 
 // بتضيف اغنية وحدة
-const addSongToPlaylist = async (req, res) => {
+exports.addSongToPlaylist = async (req, res) => {
     const { id } = req.params;
     const { songId } = req.body;
 
