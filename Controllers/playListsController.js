@@ -16,6 +16,7 @@ exports.createPlaylist = async (req, res) => {
         await playlist.save();
         res.status(201).json(playlist);
     } catch (error) {
+        console.log('Error creating playlist', error);
         res.status(500).json({ message: 'Error creating playlist', error });
     }
 };
@@ -74,6 +75,7 @@ exports.updatePlaylist = async (req, res) => {
 
         res.json(updatedPlayList);
     } catch (error) {
+        console.log('Error updating playlist', error);
         res.status(500).json({ message: 'Error updating playlist', error });
     }
 };
@@ -97,6 +99,7 @@ exports.getPublicPlaylists = async (req, res) => {
 
         res.json(playlists); // إرجاع البلاي ليستات
     } catch (error) {
+        console.log('Error fetching public playlists', error);
         res.status(500).json({ message: 'Error fetching public playlists', error });
     }
 };
@@ -126,6 +129,7 @@ exports.deletePlaylist = async (req, res) => {
 
         res.status(200).json({ message: 'Playlist deleted successfully' });
     } catch (error) {
+        console.log('Error deleting playlist', error);
         res.status(500).json({ message: 'Error deleting playlist', error });
     }
 };
@@ -162,6 +166,7 @@ exports.removeSongFromPlaylist = async (req, res) => {
 
         res.json(updatedPlaylist);
     } catch (error) {
+        console.log('Error removing song from playlist', error);
         res.status(500).json({ message: 'Error removing song from playlist', error });
     }
 };
@@ -201,6 +206,8 @@ exports.addSongToPlaylist = async (req, res) => {
 
         res.json(updatedPlaylist);
     } catch (error) {
+        console.log('Error adding song to playlist', error);
+
         res.status(500).json({ message: 'Error adding song to playlist', error });
     }
 };

@@ -10,3 +10,4 @@ const PlaylistSchema = new mongoose.Schema({
 }, { timestamps: true });
 
 const Playlist = mongoose.model('Playlist', PlaylistSchema);
+module.exports = Playlist;
