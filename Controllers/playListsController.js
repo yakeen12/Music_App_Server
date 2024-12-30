@@ -23,12 +23,12 @@ exports.createPlaylist = async (req, res) => {
 // جلب بلاي ليستات اليوزر
 // هاي لصفحة البلاي ليست في النافيقيشن بار تبع اليوزر
 exports.getUserPlaylists = async (req, res) => {
-    console.log("getUserPlaylists", req.user.id);
+    console.log("getUserPlaylists", req.user.userId);
     console.log("getUserPlaylists req.user", req.user);
 
     try {
 
-        const playlists = await Playlist.find({ createdBy: req.user.id });
+        const playlists = await Playlist.find({ createdBy: req.user.userId });
         // .populate({
         //     path: 'songs',
         //     populate: { path: 'artist', select: 'name' } // جلب اسم الفنان فقط
