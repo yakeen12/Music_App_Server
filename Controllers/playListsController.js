@@ -155,9 +155,19 @@ exports.removeSongFromPlaylist = async (req, res) => {
         const playlist = await Playlist.findById(id);
 
         if (!playlist) {
+            console.log("id: ", id, 'Playlist not found');
             return res.status(404).json({ message: 'Playlist not found' });
         }
 
+        // تحقق من وجود الأغنية في البلاي ليست
+        if (playlist.songs.includes(songId)) {
+            console.log("song exist");
+        } else {
+            console.log("song not found", songId);
+        }
+
+        console.log("playlist.createdBy.toString() !== req.user.id",
+            playlist.createdBy.toString(), req.user.userId, playlist.createdBy.toString() !== req.user.id,);
         // التأكد من أن اليوزر هو الذي أنشأ البلاي ليست أو أنه مسموح له بالتعديل
         if (playlist.createdBy.toString() !== req.user.userId && !playlist.allowEditing) {
             return res.status(403).json({ message: 'Not allowed to edit this playlist' });
@@ -209,7 +219,7 @@ exports.addSongToPlaylist = async (req, res) => {
             return res.status(400).json({ message: 'Song already exists in this playlist' });
         }
 
-        console.log("playlist.createdBy.toString() !== req.user.id", playlist.createdBy.toString(), req.user.userId, playlist.createdBy.toString() !== req.user.id,)
+        console.log("playlist.createdBy.toString() !== req.user.id", playlist.createdBy.toString(), req.user.userId, playlist.createdBy.toString() !== req.user.id,);
         // التأكد من أن اليوزر هو الذي أنشأ البلاي ليست أو أنه مسموح له بالتعديل
         if (playlist.createdBy.toString() !== req.user.userId && !playlist.allowEditing) {
             console.log('Not allowed to edit this playlist');

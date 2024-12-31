@@ -1,11 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const authenticate = require('../MiddleWare/authenticate');
-
-
 const playListsController = require('../Controllers/playListsController');
 
-console.log('playListsController:', playListsController);
 
 
 // جلب البلاي ليستات العامة الخاصة بيوزر معين
