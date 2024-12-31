@@ -14,4 +14,7 @@ router.put('/:id', upload.single('image'), updateArtist);
 // Route للحصول على فنان بواسطة ID
 router.get('/:id', getArtistById);
 
+// get all artists للسيرتش 
+
+
 module.exports = router;

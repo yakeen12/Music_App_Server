@@ -37,7 +37,7 @@ exports.getAllSongs = async (req, res) => {
     console.log("bodyyyyyyyyy:", req.body);  // طباعة البيانات للتأكد من وصولها
 
     try {
-        const songs = await Song.find().populate('artist', 'name');  // العثور على جميع الأغاني
+        const songs = await Song.find().populate('artist');  // العثور على جميع الأغاني
         res.status(200).json({ songs });
     } catch (error) {
         res.status(500).json({ message: 'Error fetching songs', error });
@@ -125,7 +125,7 @@ exports.addLike = async (req, res) => {
 exports.getLatestSongs = async (req, res) => {
     try {
         console.log('Fetching latest songs...');
-        const songs = await Song.find().sort({ createdAt: -1 }).populate('artist', 'name').limit(10);
+        const songs = await Song.find().sort({ createdAt: -1 }).populate('artist').limit(10);
         console.log('Songs found:', songs);
 
         if (songs.length === 0) {
