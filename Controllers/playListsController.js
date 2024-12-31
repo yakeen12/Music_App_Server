@@ -65,7 +65,7 @@ exports.updatePlaylist = async (req, res) => {
             return res.status(404).json({ message: 'Playlist not found' });
         }
 
-        if (playlist.createdBy.toString() !== req.user.id && !playlist.allowEditing) {
+        if (playlist.createdBy.toString() !== req.user.userId && !playlist.allowEditing) {
             return res.status(403).json({ message: 'Not allowed to edit this playlist' });
         }
 
@@ -126,7 +126,7 @@ exports.deletePlaylist = async (req, res) => {
         // التأكد من أن البلاي ليست التي سيتم حذفها تخص المستخدم الحالي
         const playlist = await Playlist.findOne({
             _id: playlistId,
-            createdBy: req.user.id
+            createdBy: req.user.userId
         });
 
         // إذا لم يتم العثور على البلاي ليست أو إذا كانت لا تخص المستخدم
@@ -159,7 +159,7 @@ exports.removeSongFromPlaylist = async (req, res) => {
         }
 
         // التأكد من أن اليوزر هو الذي أنشأ البلاي ليست أو أنه مسموح له بالتعديل
-        if (playlist.createdBy.toString() !== req.user.id && !playlist.allowEditing) {
+        if (playlist.createdBy.toString() !== req.user.userId && !playlist.allowEditing) {
             return res.status(403).json({ message: 'Not allowed to edit this playlist' });
         }
 
