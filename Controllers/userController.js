@@ -62,7 +62,7 @@ exports.getLikedSongs = async (req, res) => {
 
         const user = await User.findById(req.user.userId).populate({
             path: 'likedSongs',
-            populate: { path: 'artist',} // جلب اسم الفنان;   
+            populate: { path: 'artist', select: 'name' } // جلب اسم الفنان;   
         });
         console.log("user", user);
 
@@ -119,7 +119,7 @@ exports.toggleLikeSong = async (req, res) => {
         // جلب قائمة الأغاني المعجبة مرة أخرى مع التفاصيل
         const updatedUser = await User.findById(req.user.userId).populate({
             path: 'likedSongs',
-            populate: { path: 'artist', } // جلب اسم الفنان
+            populate: { path: 'artist', select: 'name' } // جلب اسم الفنان
         });
 
         res.json({ success: true, likedSongs: updatedUser.likedSongs });
