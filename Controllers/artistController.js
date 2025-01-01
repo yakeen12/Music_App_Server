@@ -7,7 +7,7 @@ exports.getArtistById = async (req, res) => {
     console.log("bodyyyyyyyyy:", req.body);  // طباعة البيانات للتأكد من وصولها
 
     try {
-        const artist = await Artist.findById(req.params.id).populate('songs');
+        const artist = await Artist.findById(req.params.id).populate({ path: "songs", populate: { path: 'artist', select: 'name' } });
         if (!artist) {
             return res.status(404).json({ message: 'Artist not found' });
         }
