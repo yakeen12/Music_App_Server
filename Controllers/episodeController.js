@@ -31,8 +31,13 @@ const getLatestEpisodes = async (req, res) => {
 };
 
 const createEpisode = async (req, res) => {
-    const { podcast, title, episodeNumber, description, audioUrl } = req.body;
+    const { podcastID, title, episodeNumber, description, audioUrl } = req.body;
     try {
+        const podcast = await Podcast.findById(podcastID);
+        if (!podcast) {
+            return res.status(404).json({ message: 'Podcast not found' });
+        }
+
         const newEpisode = new Episode({
             podcast,
             title,
@@ -41,14 +46,15 @@ const createEpisode = async (req, res) => {
             audioUrl,
         });
         const savedEpisode = await newEpisode.save();
+        podcast.episodes.push(newEpisode._id);
+        await podcast.save;
 
         // Populate the host information after saving
         const populatedEpisode = await savedEpisode.populate({
             path: 'podcast',
             select: 'host',
         }).execPopulate();
-
-        res.status(201).json(populatedEpisode);
+        res.status(201).json({ message: 'Song added successfully', episode: populatedEpisode });
     } catch (error) {
         res.status(500).json({ message: error.message });
     }

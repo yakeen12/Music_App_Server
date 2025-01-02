@@ -6,13 +6,12 @@ const createPodcast = async (req, res) => {
     console.log("bodyyyyyyyyy:", req.body);  // طباعة البيانات للتأكد من وصولها
 
     try {
-        const { title, host, genre, description } = req.body;
+        const { title, host, description } = req.body;
 
         // إنشاء البودكاست الجديد
         const newPodcast = new Podcast({
             title,
             host,
-            genre,
             description
         });
 
@@ -59,7 +58,7 @@ const updatePodcast = async (req, res) => {
 
         const updatedPodcast = await Podcast.findByIdAndUpdate(
             req.params.id,
-            { title, host, genre, description },
+            { title, host, description },
             { new: true }
         );  // تحديث البودكاست باستخدام الـ ID
 
@@ -91,12 +90,12 @@ const deletePodcast = async (req, res) => {
 // إضافة حلقة إلى البودكاست
 const addEpisodeToPodcast = async (req, res) => {
     try {
-        const { episodeId } = req.body;
+        // const { episodeId } = req.body;
 
-        const podcast = await Podcast.findById(req.params.id);
-        if (!podcast) {
-            return res.status(404).json({ message: 'Podcast not found' });
-        }
+        // const podcast = await Podcast.findById(req.params.id);
+        // if (!podcast) {
+        //     return res.status(404).json({ message: 'Podcast not found' });
+        // }
 
         // إضافة الحلقة إلى قائمة الحلقات الخاصة بالبودكاست
         podcast.episodes.push(episodeId);

@@ -11,6 +11,7 @@ const secretGiftRoutes = require('./Routes/secretGiftRoutes');
 const playlistsRoutes = require('./Routes/playListsRoutes');
 // const upload = require('./MiddleWare/multer'); // استيراد Multer
 const artistRoutes = require('./Routes/artistRoutes');
+const episodesRoutes = require('./Routes/episodeRoutes');
 
 const mongoose = require('mongoose');
 
@@ -54,6 +55,8 @@ app.use('/api/posts', postRoutes);
 app.use('/api/secretGifts', secretGiftRoutes);
 app.use('/api/artists', artistRoutes);
 app.use('/api/playlists', playlistsRoutes);
+app.use('/api/episodes', episodesRoutes);
+
 
 app.listen(PORT, () => {
     console.log(`http://localhost:${PORT}`);
