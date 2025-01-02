@@ -1,5 +1,5 @@
 
-// Router
+const express = require('express');
 const router = express.Router();
 const episodeController = require('../Controllers/episodeController'); // Assuming this file is saved as episodeController.js
 
