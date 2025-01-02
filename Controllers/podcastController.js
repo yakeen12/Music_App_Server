@@ -6,10 +6,11 @@ const createPodcast = async (req, res) => {
     console.log("bodyyyyyyyyy:", req.body);  // طباعة البيانات للتأكد من وصولها
 
     try {
-        const { title, host, description } = req.body;
+        const { title, host, description, img } = req.body;
 
         // إنشاء البودكاست الجديد
         const newPodcast = new Podcast({
+            img,
             title,
             host,
             description
