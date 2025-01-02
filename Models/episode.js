@@ -6,7 +6,7 @@ const episodeSchema = new mongoose.Schema({
         ref: 'Podcast'
     },
     title: String,
-    episodeNumber: Number,
+    episodeNumber: String,
     description: String,
     audioUrl: String,
 });
