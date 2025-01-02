@@ -47,7 +47,7 @@ const createEpisode = async (req, res) => {
         });
         const savedEpisode = await newEpisode.save();
         podcast.episodes.push(newEpisode._id);
-        await podcast.save;
+     podcast.save;
 
         // Populate the host information after saving
         const populatedEpisode = await savedEpisode.populate({

@@ -5,7 +5,6 @@ const podcastController = require('../Controllers/podcastController');
 
 
 
-// حذف بودكاست
 router.get('/:id', podcastController.getPodcastById);
 
 // حذف بودكاست
