@@ -7,7 +7,7 @@ const getAllEpisodes = async (req, res) => {
     try {
         const episodes = await Episode.find().populate({
             path: 'podcast',
-            select: 'host', // Assuming the Podcast schema has a 'host' field
+            select: 'title img', // Assuming the Podcast schema has a 'host' field
         });
         res.status(200).json(episodes);
     } catch (error) {
