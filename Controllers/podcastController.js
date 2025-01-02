@@ -55,7 +55,7 @@ const updatePodcast = async (req, res) => {
     console.log("bodyyyyyyyyy:", req.body);  // طباعة البيانات للتأكد من وصولها
 
     try {
-        const { title, host, genre, description } = req.body;
+        const { title, host, description } = req.body;
 
         const updatedPodcast = await Podcast.findByIdAndUpdate(
             req.params.id,

@@ -22,7 +22,7 @@ const getLatestEpisodes = async (req, res) => {
             .limit(10)
             .populate({
                 path: 'podcast',
-                select: 'host',
+                select: 'title img',
             });
         res.status(200).json(episodes);
     } catch (error) {
