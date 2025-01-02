@@ -40,20 +40,17 @@ const getPodcastById = async (req, res) => {
     console.log("bodyyyyyyyyy:", req.body);  // طباعة البيانات للتأكد من وصولها
 
     try {
-        const podcast = await Podcast.findById(req.params.id);
-        // .populate({
-        //     path: 'episodes', // ملء الحقل episodes
-        //     populate: {
-        //         path: 'podcast', // ملء الحقل podcast داخل episodes
-        //         select: 'title img', // تحديد الحقول المطلوبة
-        //     },
-        // });
+        const podcast = await Podcast.findById(req.params.id)
+            .populate({
+                path: 'episodes', // ملء الحقل episodes
+                populate: {
+                    path: 'podcast', // ملء الحقل podcast داخل episodes
+                    select: 'title img', // تحديد الحقول المطلوبة
+                },
+            });
         if (!podcast) {
             return res.status(404).json({ message: 'Podcast not found' });
         }
-        console.log(podcast);
-        console.log(JSON.stringify(podcast.episodes, null, 2));
-
         res.status(200).json(podcast);
     } catch (error) {
         res.status(500).json({ message: 'Error fetching podcast', error: error.message });
