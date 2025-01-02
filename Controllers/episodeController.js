@@ -53,7 +53,7 @@ const createEpisode = async (req, res) => {
         const populatedEpisode = await savedEpisode.populate({
             path: 'podcast',
             select: 'host',
-        }).execPopulate();
+        });
         res.status(201).json({ message: 'Song added successfully', episode: populatedEpisode });
     } catch (error) {
         res.status(500).json({ message: error.message });
