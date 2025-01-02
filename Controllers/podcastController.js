@@ -52,7 +52,7 @@ const getPodcastById = async (req, res) => {
             return res.status(404).json({ message: 'Podcast not found' });
         }
         console.log(podcast);
-        console.log(JSON.stringify(podcast, null, 2));
+        console.log(JSON.stringify(podcast.episodes, null, 2));
 
         res.status(200).json(podcast);
     } catch (error) {

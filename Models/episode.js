@@ -11,9 +11,5 @@ const episodeSchema = new mongoose.Schema({
     audioUrl: String,
 });
 
-
-
-
-
 const Episode = mongoose.model('Episode', episodeSchema);
 module.exports = Episode;
