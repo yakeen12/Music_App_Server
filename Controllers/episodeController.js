@@ -52,7 +52,7 @@ const createEpisode = async (req, res) => {
         // Populate the host information after saving
         const populatedEpisode = await savedEpisode.populate({
             path: 'podcast',
-            select: 'host',
+            select: 'host img',
         });
         res.status(201).json({ message: 'Song added successfully', episode: populatedEpisode });
     } catch (error) {
