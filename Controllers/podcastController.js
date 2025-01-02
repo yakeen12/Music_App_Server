@@ -40,7 +40,14 @@ const getPodcastById = async (req, res) => {
     console.log("bodyyyyyyyyy:", req.body);  // طباعة البيانات للتأكد من وصولها
 
     try {
-        const podcast = await Podcast.findById(req.params.id).populate({ path: "episodes", });
+        const podcast = await Podcast.findById(req.params.id)
+            .populate({
+                path: 'episodes', // ملء الحقل episodes
+                populate: {
+                    path: 'podcast', // ملء الحقل podcast داخل episodes
+                    select: 'title img', // تحديد الحقول المطلوبة
+                },
+            });
         if (!podcast) {
             return res.status(404).json({ message: 'Podcast not found' });
         }
