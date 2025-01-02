@@ -44,6 +44,7 @@ const getPodcastById = async (req, res) => {
         if (!podcast) {
             return res.status(404).json({ message: 'Podcast not found' });
         }
+        console.log(podcast);
         res.status(200).json(podcast);
     } catch (error) {
         res.status(500).json({ message: 'Error fetching podcast', error: error.message });

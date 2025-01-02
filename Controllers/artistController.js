@@ -11,7 +11,7 @@ exports.getArtistById = async (req, res) => {
         if (!artist) {
             return res.status(404).json({ message: 'Artist not found' });
         }
-
+        
         res.status(200).json(artist);
     } catch (error) {
         res.status(500).json({ message: 'Error retrieving artist', error });
