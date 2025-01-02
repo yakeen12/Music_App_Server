@@ -9,7 +9,6 @@ const episodeSchema = new mongoose.Schema({
     episodeNumber: Number,
     description: String,
     audioUrl: String,
-    publishDate: Date
 });
 
 
