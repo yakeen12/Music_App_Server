@@ -33,6 +33,17 @@ const postSchema = new mongoose.Schema({
     },
 });
 
+// التأكد من أن إما `song` أو `podcast` مملوء وليس كلاهما في نفس الوقت
+postSchema.pre('save', function (next) {
+    if (!this.song && !this.podcast) {
+        return next(new Error('A post must have either a song or a podcast.'));
+    }
+    if (this.song && this.podcast) {
+        return next(new Error('A post cannot have both a song and a podcast.'));
+    }
+    next();
+});
+
 const Post = mongoose.model('Post', postSchema);
 
 module.exports = Post;
