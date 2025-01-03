@@ -50,6 +50,35 @@ exports.getPostsByCommunity = async (req, res) => {
 };
 
 
+
+// 2. عرض بوستات كوميونيتي بناءً على اسم الكوميونيتي
+exports.getPostById = async (req, res) => {
+    const { postId } = req.params;
+
+    try {
+        const posts = await Post.findById(postId)
+            .populate('user', 'username profilePicture')  // استرجاع اسم اليوزر
+            .populate('song')  // استرجاع تفاصيل الأغنية (إذا موجودة)
+            .populate('podcast')
+            .populate('comments')  // استرجاع تفاصيل البودكاست (إذا موجود)
+            .sort({ createdAt: -1 });  // ترتيب البوستات بناءً على التاريخ (الأحدث أولاً)
+
+        // إضافة حالة hasLiked لكل بوست
+        const postsWithLikes = posts.map(post => {
+            const hasLiked = post.likes.includes(userId);  // تحقق إذا كان اليوزر قد وضع لايك
+            return {
+                ...post.toObject(),  // تحويل الكائن إلى شكل عادي يمكن تعديله
+                hasLiked,  // إضافة حالة اللايك
+            };
+        });
+
+        res.status(200).json(postsWithLikes);  // إرجاع البوستات مع حالة hasLiked
+    } catch (err) {
+        res.status(500).json({ message: 'Error fetching posts', error: err.message });
+    }
+};
+
+
 exports.getPostsByUserId = async (req, res) => {
     const { userId } = req.params;  // الحصول على الـ userId من URL
 
