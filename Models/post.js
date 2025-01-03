@@ -17,7 +17,7 @@ const postSchema = new mongoose.Schema({
     },
     episode: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'ُEpisode',  // ربط البودكاست
+        ref: 'Episode',  // ربط البودكاست
     },
     likes: [{
         type: mongoose.Schema.Types.ObjectId,
@@ -33,7 +33,7 @@ const postSchema = new mongoose.Schema({
     },
 });
 
-// التأكد من أن إما `song` أو `podcast` مملوء وليس كلاهما في نفس الوقت
+// التأكد من أن إما `song` أو `episode` مملوء وليس كلاهما في نفس الوقت
 postSchema.pre('save', function (next) {
     if (!this.song && !this.episode) {
         return next(new Error('A post must have either a song or a podcast.'));
