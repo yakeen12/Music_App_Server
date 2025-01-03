@@ -5,7 +5,7 @@ const User = require('../Models/user');
 // 1. إضافة بوست جديد
 exports.createPost = async (req, res) => {
     const { community, content, songId, episodeId } = req.body;
-    const user = req.userId; // هذا يفترض أنك ستقوم بالتحقق من هوية اليوزر باستخدام middleware مثل JWT
+    const user = User.findById(req.userId); // هذا يفترض أنك ستقوم بالتحقق من هوية اليوزر باستخدام middleware مثل JWT
 
     try {
         const newPost = new Post({
