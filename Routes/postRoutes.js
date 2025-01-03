@@ -11,13 +11,13 @@ router.post('/post/:postId/like', authenticate, postController.toggleLike);
 router.post('/add', authenticate, postController.createPost);
 
 // by community
-router.get('/post/:communityName:', postController.getPostsByCommunity)
+router.get('/post/:communityName:', authenticate, postController.getPostsByCommunity)
 
 // مسار للحصول على منشور حسب ID
-router.get('/:postId', postController.getPostById);
+router.get('/:postId', authenticate, postController.getPostById);
 
 // عرض جميع المنشورات
-router.get('/', postController.getAllPosts);
+router.get('/', authenticate, postController.getAllPosts);
 
 
 
