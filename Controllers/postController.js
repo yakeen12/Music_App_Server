@@ -45,7 +45,13 @@ exports.getPostsByCommunity = async (req, res) => {
                     select: 'name', // استرجاع اسم الفنان وسيرته الذاتية فقط
                 },
             }) // استرجاع تفاصيل الأغنية (إذا موجودة)
-            .populate('episode')  // استرجاع تفاصيل البودكاست (إذا موجود)
+            .populate({
+                path: 'episode',
+                populate: {
+                    path: "podcast",
+                    select: "title"
+                }
+            })  // استرجاع تفاصيل البودكاست (إذا موجود)
             .sort({ createdAt: -1 });  // ترتيب البوستات بناءً على التاريخ (الأحدث أولاً)
 
         // إضافة حالة hasLiked لكل بوست
@@ -78,7 +84,13 @@ exports.getAllPosts = async (req, res) => {
                     select: 'name', // استرجاع اسم الفنان وسيرته الذاتية فقط
                 },
             }) // استرجاع تفاصيل الأغنية (إذا موجودة)
-            .populate('episode')  // استرجاع تفاصيل البودكاست (إذا موجود)
+            .populate({
+                path: 'episode',
+                populate: {
+                    path: "podcast",
+                    select: "title"
+                }
+            })  // استرجاع تفاصيل البودكاست (إذا موجود)
             .sort({ createdAt: -1 });  // ترتيب البوستات بناءً على التاريخ (الأحدث أولاً)
         // إضافة حالة hasLiked لكل بوست
         const postsWithLikes = posts.map(post => {
@@ -112,7 +124,8 @@ exports.getPostById = async (req, res) => {
                 },
             }) // استرجاع تفاصيل الأغنية (إذا موجودة)
             .populate({
-                path: 'episode', populate: {
+                path: 'episode',
+                populate: {
                     path: "podcast",
                     select: "title"
                 }
@@ -147,7 +160,13 @@ exports.getPostsByUserId = async (req, res) => {
                     select: 'name', // استرجاع اسم الفنان وسيرته الذاتية فقط
                 },
             }) // استرجاع تفاصيل الأغنية (إذا موجودة)
-            .populate('episode')  // استرجاع تفاصيل البودكاست (إذا موجود)
+            .populate({
+                path: 'episode',
+                populate: {
+                    path: "podcast",
+                    select: "title"
+                }
+            })  // استرجاع تفاصيل البودكاست (إذا موجود)
             .sort({ createdAt: -1 });  // ترتيب البوستات بناءً على التاريخ (الأحدث أولاً)
         if (posts.length === 0) {
             return res.status(404).json({ message: 'No posts found for this user' });
