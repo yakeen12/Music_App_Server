@@ -114,6 +114,7 @@ exports.getPostById = async (req, res) => {
             .populate({
                 path: 'episode', populate: {
                     path: "podcast",
+                    select: "title"
                 }
             })  // استرجاع تفاصيل البودكاست (إذا موجود)
             .sort({ createdAt: -1 });  // ترتيب البوستات بناءً على التاريخ (الأحدث أولاً)
