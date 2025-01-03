@@ -42,7 +42,7 @@ exports.getPostsByCommunity = async (req, res) => {
                 path: 'song', // ربط الأغنية
                 populate: { // بوبيوليت للفنان المرتبط بالأغنية
                     path: 'artist',
-                    select: 'name bio', // استرجاع اسم الفنان وسيرته الذاتية فقط
+                    select: 'name', // استرجاع اسم الفنان وسيرته الذاتية فقط
                 },
             }) // استرجاع تفاصيل الأغنية (إذا موجودة)
             .populate('episode')  // استرجاع تفاصيل البودكاست (إذا موجود)
