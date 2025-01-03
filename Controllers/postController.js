@@ -71,10 +71,15 @@ exports.getAllPosts = async (req, res) => {
     try {
         const posts = await Post.find()
             .populate('user', 'username profilePicture')  // استرجاع اسم اليوزر
-            .populate('song')  // استرجاع تفاصيل الأغنية (إذا موجودة)
+            .populate({
+                path: 'song', // ربط الأغنية
+                populate: { // بوبيوليت للفنان المرتبط بالأغنية
+                    path: 'artist',
+                    select: 'name', // استرجاع اسم الفنان وسيرته الذاتية فقط
+                },
+            }) // استرجاع تفاصيل الأغنية (إذا موجودة)
             .populate('episode')  // استرجاع تفاصيل البودكاست (إذا موجود)
             .sort({ createdAt: -1 });  // ترتيب البوستات بناءً على التاريخ (الأحدث أولاً)
-
         // إضافة حالة hasLiked لكل بوست
         const postsWithLikes = posts.map(post => {
             const hasLiked = post.likes.includes(user);  // تحقق إذا كان اليوزر قد وضع لايك
@@ -99,11 +104,15 @@ exports.getPostById = async (req, res) => {
     try {
         const posts = await Post.findById(postId)
             .populate('user', 'username profilePicture')  // استرجاع اسم اليوزر
-            .populate('song')  // استرجاع تفاصيل الأغنية (إذا موجودة)
-            .populate('episode')
-            .populate('comments')  // استرجاع تفاصيل البودكاست (إذا موجود)
+            .populate({
+                path: 'song', // ربط الأغنية
+                populate: { // بوبيوليت للفنان المرتبط بالأغنية
+                    path: 'artist',
+                    select: 'name', // استرجاع اسم الفنان وسيرته الذاتية فقط
+                },
+            }) // استرجاع تفاصيل الأغنية (إذا موجودة)
+            .populate('episode')  // استرجاع تفاصيل البودكاست (إذا موجود)
             .sort({ createdAt: -1 });  // ترتيب البوستات بناءً على التاريخ (الأحدث أولاً)
-
         // إضافة حالة hasLiked لكل بوست
         const postsWithLikes = posts.map(post => {
             const hasLiked = post.likes.includes(userId);  // تحقق إذا كان اليوزر قد وضع لايك
@@ -126,10 +135,15 @@ exports.getPostsByUserId = async (req, res) => {
     try {
         const posts = await Post.find({ user: userId })  // العثور على البوستات المرتبطة بالـ userId
             .populate('user', 'username profilePicture')  // استرجاع اسم اليوزر
-            .populate('song')  // استرجاع تفاصيل الأغنية (إذا موجودة)
+            .populate({
+                path: 'song', // ربط الأغنية
+                populate: { // بوبيوليت للفنان المرتبط بالأغنية
+                    path: 'artist',
+                    select: 'name', // استرجاع اسم الفنان وسيرته الذاتية فقط
+                },
+            }) // استرجاع تفاصيل الأغنية (إذا موجودة)
             .populate('episode')  // استرجاع تفاصيل البودكاست (إذا موجود)
             .sort({ createdAt: -1 });  // ترتيب البوستات بناءً على التاريخ (الأحدث أولاً)
-
         if (posts.length === 0) {
             return res.status(404).json({ message: 'No posts found for this user' });
         }
