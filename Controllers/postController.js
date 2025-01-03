@@ -111,7 +111,11 @@ exports.getPostById = async (req, res) => {
                     select: 'name', // استرجاع اسم الفنان وسيرته الذاتية فقط
                 },
             }) // استرجاع تفاصيل الأغنية (إذا موجودة)
-            .populate('episode')  // استرجاع تفاصيل البودكاست (إذا موجود)
+            .populate({
+                path: 'episode', populate: {
+                    path: "podcast",
+                }
+            })  // استرجاع تفاصيل البودكاست (إذا موجود)
             .sort({ createdAt: -1 });  // ترتيب البوستات بناءً على التاريخ (الأحدث أولاً)
         // إضافة حالة hasLiked لكل بوست
         const postsWithLikes = posts.map(post => {
