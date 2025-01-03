@@ -19,7 +19,8 @@ exports.createPost = async (req, res) => {
         await newPost.save();
         res.status(201).json(newPost);
     } catch (err) {
-        res.status(500).json({ message: 'Error creating post' });
+        console.log(err);
+        res.status(500).json({ message: 'Error creating post', err });
     }
 };
 
