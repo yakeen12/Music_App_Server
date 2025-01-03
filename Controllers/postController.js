@@ -36,7 +36,7 @@ exports.getPostsByCommunity = async (req, res) => {
     const { communityName } = req.params;
 
     try {
-        const posts = await Post.find({ community: communityName })
+        const posts = await Post.find({ $eq: communityName })
             .populate('user', 'username profilePicture')  // استرجاع اسم اليوزر
             .populate('song')  // استرجاع تفاصيل الأغنية (إذا موجودة)
             .populate('episode')  // استرجاع تفاصيل البودكاست (إذا موجود)
