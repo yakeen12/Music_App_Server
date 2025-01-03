@@ -39,7 +39,7 @@ exports.getPostsByCommunity = async (req, res) => {
         const posts = await Post.find({ community: communityName })
             .populate('user', 'username profilePicture')  // استرجاع اسم اليوزر
             .populate('song')  // استرجاع تفاصيل الأغنية (إذا موجودة)
-            .populate('podcast')  // استرجاع تفاصيل البودكاست (إذا موجود)
+            .populate('episode')  // استرجاع تفاصيل البودكاست (إذا موجود)
             .sort({ createdAt: -1 });  // ترتيب البوستات بناءً على التاريخ (الأحدث أولاً)
 
         // إضافة حالة hasLiked لكل بوست
@@ -66,7 +66,7 @@ exports.getAllPosts = async (req, res) => {
         const posts = await Post.find()
             .populate('user', 'username profilePicture')  // استرجاع اسم اليوزر
             .populate('song')  // استرجاع تفاصيل الأغنية (إذا موجودة)
-            .populate('podcast')  // استرجاع تفاصيل البودكاست (إذا موجود)
+            .populate('episode')  // استرجاع تفاصيل البودكاست (إذا موجود)
             .sort({ createdAt: -1 });  // ترتيب البوستات بناءً على التاريخ (الأحدث أولاً)
 
         // إضافة حالة hasLiked لكل بوست
@@ -94,7 +94,7 @@ exports.getPostById = async (req, res) => {
         const posts = await Post.findById(postId)
             .populate('user', 'username profilePicture')  // استرجاع اسم اليوزر
             .populate('song')  // استرجاع تفاصيل الأغنية (إذا موجودة)
-            .populate('podcast')
+            .populate('episode')
             .populate('comments')  // استرجاع تفاصيل البودكاست (إذا موجود)
             .sort({ createdAt: -1 });  // ترتيب البوستات بناءً على التاريخ (الأحدث أولاً)
 
@@ -115,13 +115,13 @@ exports.getPostById = async (req, res) => {
 
 
 exports.getPostsByUserId = async (req, res) => {
-    const { userId } = await  req.user.userId
+    const { userId } = await req.user.userId
 
     try {
         const posts = await Post.find({ user: userId })  // العثور على البوستات المرتبطة بالـ userId
             .populate('user', 'username profilePicture')  // استرجاع اسم اليوزر
             .populate('song')  // استرجاع تفاصيل الأغنية (إذا موجودة)
-            .populate('podcast')  // استرجاع تفاصيل البودكاست (إذا موجود)
+            .populate('episode')  // استرجاع تفاصيل البودكاست (إذا موجود)
             .sort({ createdAt: -1 });  // ترتيب البوستات بناءً على التاريخ (الأحدث أولاً)
 
         if (posts.length === 0) {
@@ -145,7 +145,7 @@ exports.getPostsByUserId = async (req, res) => {
 
 exports.toggleLike = async (req, res) => {
     const { postId } = req.params;
-    const userId =  await req.user.userId
+    const userId = await req.user.userId
 
     try {
         const post = await Post.findById(postId);
