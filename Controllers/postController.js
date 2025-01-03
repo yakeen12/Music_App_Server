@@ -7,11 +7,9 @@ exports.createPost = async (req, res) => {
     const { community, content, songId, episodeId } = req.body;
 
     // التأكد من أن اليوزر موجود في قاعدة البيانات
-    const user = await User.findById(req.userId);
-    if (!user) {
-        return res.status(404).json({ message: 'User not found' });
-    }
-    
+    const user = await req.userId;
+
+
     try {
         const newPost = new Post({
             community,
