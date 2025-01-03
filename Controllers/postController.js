@@ -31,7 +31,8 @@ exports.createPost = async (req, res) => {
 
 // 2. عرض بوستات كوميونيتي بناءً على اسم الكوميونيتي
 exports.getPostsByCommunity = async (req, res) => {
-    const userId = req.user.userId
+    const user = await req.user.userId;
+    console.log(user);
     const { communityName } = req.params;
 
     try {
@@ -43,7 +44,7 @@ exports.getPostsByCommunity = async (req, res) => {
 
         // إضافة حالة hasLiked لكل بوست
         const postsWithLikes = posts.map(post => {
-            const hasLiked = post.likes.includes(userId);  // تحقق إذا كان اليوزر قد وضع لايك
+            const hasLiked = post.likes.includes(user);  // تحقق إذا كان اليوزر قد وضع لايك
             return {
                 ...post.toObject(),  // تحويل الكائن إلى شكل عادي يمكن تعديله
                 hasLiked,  // إضافة حالة اللايك
@@ -58,7 +59,8 @@ exports.getPostsByCommunity = async (req, res) => {
 
 
 exports.getAllPosts = async (req, res) => {
-    const userId = req.user.userId
+    const user = await req.user.userId;
+    console.log(user);
 
     try {
         const posts = await Post.find()
@@ -69,7 +71,7 @@ exports.getAllPosts = async (req, res) => {
 
         // إضافة حالة hasLiked لكل بوست
         const postsWithLikes = posts.map(post => {
-            const hasLiked = post.likes.includes(userId);  // تحقق إذا كان اليوزر قد وضع لايك
+            const hasLiked = post.likes.includes(user);  // تحقق إذا كان اليوزر قد وضع لايك
             return {
                 ...post.toObject(),  // تحويل الكائن إلى شكل عادي يمكن تعديله
                 hasLiked,  // إضافة حالة اللايك
@@ -85,7 +87,7 @@ exports.getAllPosts = async (req, res) => {
 
 
 exports.getPostById = async (req, res) => {
-    const { userId } = req.user.userId
+    const { userId } = await req.user.userId
     const { postId } = req.params;
 
     try {
@@ -113,7 +115,7 @@ exports.getPostById = async (req, res) => {
 
 
 exports.getPostsByUserId = async (req, res) => {
-    const { userId } = req.user.userId
+    const { userId } = await  req.user.userId
 
     try {
         const posts = await Post.find({ user: userId })  // العثور على البوستات المرتبطة بالـ userId
@@ -143,7 +145,7 @@ exports.getPostsByUserId = async (req, res) => {
 
 exports.toggleLike = async (req, res) => {
     const { postId } = req.params;
-    const userId = req.user.userId
+    const userId =  await req.user.userId
 
     try {
         const post = await Post.findById(postId);
