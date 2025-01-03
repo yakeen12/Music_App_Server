@@ -12,7 +12,7 @@ router.get('/', Post.getAllPosts);
 // مسار للحصول على منشور حسب ID
 router.get('/:postId', Post.getPostById);
 
-// مسار لتحديث منشور
-router.put('/:postId', Post.updatePost);
+// // مسار لتحديث منشور
+// router.put('/:postId', Post.updatePost);
 
 module.exports = router;
