@@ -10,8 +10,6 @@ const userSchema = mongoose.Schema({
     // theme ?????????????
     likedSongs: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Song' }],
 
-    likedPosts: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Post' }], // Posts the user has liked
-    likedPosts: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Comment' }], // Posts the user has liked
     secretGifts: [{ type: mongoose.Schema.Types.ObjectId, ref: 'SecretGift' }], // إضافة القائمة الجديدة
 });
 const User = mongoose.model('User', userSchema);

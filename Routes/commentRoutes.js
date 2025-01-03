@@ -1,13 +1,14 @@
 const express = require('express');
 const router = express.Router();
-const Comment = require('../Controllers/commentController');
+const commentController = require('../Controllers/commentController');
 const authenticate = require('../MiddleWare/authenticate');  // استيراد الميدل وير للتحقق من التوكن
-const Post = require('../Models/post');
 
+
+router.post('/like/:id', authenticate, commentController.likeComment);
 // إضافة تعليق على منشور 
-router.post('/add', Comment.addComment);
+router.post('/add', commentController.addComment);
 
 // عرض التعليقات الخاصة بمنشور
-router.get('/post/:postId', Comment.getCommentsForPost);
+router.get('/post/:postId', commentController.getCommentsForPost);
 
 module.exports = router;

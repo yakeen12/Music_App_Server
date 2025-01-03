@@ -48,3 +48,32 @@ exports.getCommentsForPost = async (req, res) => {
         res.status(500).json({ message: 'Server error' });
     }
 };
+
+
+// ميثود لإضافة أو إزالة لايك للكومنتر
+exports.likeComment = async (req, res) => {
+    try {
+      const userId = req.user._id; // الحصول على الـ userId من الـ token
+      const commentId = req.params.id; // الحصول على الـ commentId من الـ URL parameter
+  
+      const comment = await Comment.findById(commentId); // العثور على الكومنتر بناءً على الـ commentId
+      if (!comment) {
+        return res.status(404).send({ error: 'Comment not found' });
+      }
+  
+      // إذا كان المستخدم قد أعطى لايك للكومنتر مسبقاً، نقوم بإزالته
+      if (comment.likes.includes(userId)) {
+        comment.likes = comment.likes.filter(like => like.toString() !== userId.toString()); // إزالة الـ userId من likes
+        await comment.save();
+        return res.status(200).send({ message: 'Like removed' });
+      }
+  
+      // إذا لم يكن قد أعطى لايك مسبقاً، نقوم بإضافته
+      comment.likes.push(userId);
+      await comment.save();
+  
+      res.status(200).send({ message: 'Like added', comment });
+    } catch (error) {
+      res.status(500).send({ error: 'Failed to add/remove like' });
+    }
+  };
