@@ -5,8 +5,13 @@ const User = require('../Models/user');
 // 1. إضافة بوست جديد
 exports.createPost = async (req, res) => {
     const { community, content, songId, episodeId } = req.body;
-    const user = User.findById(req.userId); // هذا يفترض أنك ستقوم بالتحقق من هوية اليوزر باستخدام middleware مثل JWT
 
+    // التأكد من أن اليوزر موجود في قاعدة البيانات
+    const user = await User.findById(req.userId);
+    if (!user) {
+        return res.status(404).json({ message: 'User not found' });
+    }
+    
     try {
         const newPost = new Post({
             community,
