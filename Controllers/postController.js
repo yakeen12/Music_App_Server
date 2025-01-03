@@ -25,6 +25,7 @@ exports.createPost = async (req, res) => {
 
 // 2. عرض بوستات كوميونيتي بناءً على اسم الكوميونيتي
 exports.getPostsByCommunity = async (req, res) => {
+    const userId = req.user.userId
     const { communityName } = req.params;
 
     try {
@@ -50,9 +51,35 @@ exports.getPostsByCommunity = async (req, res) => {
 };
 
 
+exports.getAllPosts = async (req, res) => {
+    const userId = req.user.userId
 
-// 2. عرض بوستات كوميونيتي بناءً على اسم الكوميونيتي
+    try {
+        const posts = await Post.find()
+            .populate('user', 'username profilePicture')  // استرجاع اسم اليوزر
+            .populate('song')  // استرجاع تفاصيل الأغنية (إذا موجودة)
+            .populate('podcast')  // استرجاع تفاصيل البودكاست (إذا موجود)
+            .sort({ createdAt: -1 });  // ترتيب البوستات بناءً على التاريخ (الأحدث أولاً)
+
+        // إضافة حالة hasLiked لكل بوست
+        const postsWithLikes = posts.map(post => {
+            const hasLiked = post.likes.includes(userId);  // تحقق إذا كان اليوزر قد وضع لايك
+            return {
+                ...post.toObject(),  // تحويل الكائن إلى شكل عادي يمكن تعديله
+                hasLiked,  // إضافة حالة اللايك
+            };
+        });
+
+        res.status(200).json(postsWithLikes);  // إرجاع البوستات مع حالة hasLiked
+    } catch (err) {
+        res.status(500).json({ message: 'Error fetching posts', error: err.message });
+    }
+};
+
+
+
 exports.getPostById = async (req, res) => {
+    const { userId } = req.user.userId
     const { postId } = req.params;
 
     try {
@@ -80,7 +107,7 @@ exports.getPostById = async (req, res) => {
 
 
 exports.getPostsByUserId = async (req, res) => {
-    const { userId } = req.params;  // الحصول على الـ userId من URL
+    const { userId } = req.user.userId
 
     try {
         const posts = await Post.find({ user: userId })  // العثور على البوستات المرتبطة بالـ userId
@@ -110,7 +137,7 @@ exports.getPostsByUserId = async (req, res) => {
 
 exports.toggleLike = async (req, res) => {
     const { postId } = req.params;
-    const userId = req.userId; // استخراج userId من الـ middleware
+    const userId = req.user.userId
 
     try {
         const post = await Post.findById(postId);
