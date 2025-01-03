@@ -6,8 +6,10 @@ const User = require('../Models/user');
 exports.createPost = async (req, res) => {
     const { community, content, songId, episodeId } = req.body;
 
+
     // التأكد من أن اليوزر موجود في قاعدة البيانات
     const user = await req.userId;
+    console.log(user);
 
 
     try {
