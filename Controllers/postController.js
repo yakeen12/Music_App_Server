@@ -38,7 +38,13 @@ exports.getPostsByCommunity = async (req, res) => {
     try {
         const posts = await Post.find({ community: communityName })
             .populate('user', 'username profilePicture')  // استرجاع اسم اليوزر
-            .populate('song')  // استرجاع تفاصيل الأغنية (إذا موجودة)
+            .populate({
+                path: 'song', // ربط الأغنية
+                populate: { // بوبيوليت للفنان المرتبط بالأغنية
+                    path: 'artist',
+                    select: 'name bio', // استرجاع اسم الفنان وسيرته الذاتية فقط
+                },
+            }) // استرجاع تفاصيل الأغنية (إذا موجودة)
             .populate('episode')  // استرجاع تفاصيل البودكاست (إذا موجود)
             .sort({ createdAt: -1 });  // ترتيب البوستات بناءً على التاريخ (الأحدث أولاً)
 
