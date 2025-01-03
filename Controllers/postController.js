@@ -8,7 +8,7 @@ exports.createPost = async (req, res) => {
 
 
     // التأكد من أن اليوزر موجود في قاعدة البيانات
-    const user = await req.userId;
+    const user = await req.user.userId;
     console.log(user);
 
 
