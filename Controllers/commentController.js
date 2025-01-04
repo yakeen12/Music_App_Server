@@ -60,9 +60,10 @@ exports.getCommentsForPost = async (req, res) => {
 
 // ميثود لإضافة أو إزالة لايك للكومنتر
 exports.likeComment = async (req, res) => {
+    const userId = req.user.userId; // الحصول على الـ userId من الـ token
+    console.log(userId);
     try {
-        const userId = req.user.userId; // الحصول على الـ userId من الـ token
-        console.log(userId);
+
         const commentId = req.params.id; // الحصول على الـ commentId من الـ URL parameter
 
         const comment = await Comment.findById(commentId).populate('user', 'username profilePicture').lean(); // العثور على الكومنتر بناءً على الـ commentId
