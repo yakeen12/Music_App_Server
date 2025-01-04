@@ -89,7 +89,7 @@ exports.likeComment = async (req, res) => {
 
         res.status(200).send(updatedComment);
     } catch (error) {
-        console.log(err);
+        console.log(error);
         res.status(500).send({ error: 'Failed to add/remove like' });
     }
 };
