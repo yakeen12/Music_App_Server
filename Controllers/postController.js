@@ -225,16 +225,12 @@ exports.toggleLike = async (req, res) => {
         }
 
         await post.save();
-        // إضافة حالة hasLiked لكل بوست
-        const postsWithLikes = posts.map(post => {
-            const hasLiked = post.likes.includes(userId);  // تحقق إذا كان اليوزر قد وضع لايك
-            return {
-                ...post.toObject(),  // تحويل الكائن إلى شكل عادي يمكن تعديله
-                hasLiked,  // إضافة حالة اللايك
-            };
-        });
+        const updatedPost = {
+            ...post.toObject(), // تحويل البوست إلى كائن عادي
+            hasLiked: post.likes.includes(userId), // تحقق إذا كان اليوزر قد وضع لايك
+        };
 
-        res.status(200).json(postsWithLikes);  // إرجاع البوستات مع حالة hasLiked
+        res.status(200).json(updatedPost);  // إرجاع البوستات مع حالة hasLiked
     } catch (err) {
         res.status(500).json({ message: 'Error toggling like', error: err.message });
     }
