@@ -41,12 +41,14 @@ exports.getCommentsForPost = async (req, res) => {
     console.log("bodyyyyyyyyy:", req.body);  // طباعة البيانات للتأكد من وصولها
 
     const { postId } = req.params;
+    const user = await req.user.userId;
 
     try {
         const comments = await Comment.find({ post: postId }).populate('user', 'name profilePicture').lean();
         const formattedComments = comments.map(comment => ({
             ...comment,
-            likesCount: comment.likes.length.toString(), // حساب عدد اللايكات
+            likesCount: comment.likes.length.toString(),// حساب عدد اللايكات
+            hasLiked: comment.likes.includes(user)
         }));
 
         res.status(200).json(formattedComments);

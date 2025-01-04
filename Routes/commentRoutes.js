@@ -9,6 +9,6 @@ router.post('/like/:id', authenticate, commentController.likeComment);
 router.post('/add/:postId', authenticate, commentController.addComment);
 
 // عرض التعليقات الخاصة بمنشور
-router.get('/post/:postId', commentController.getCommentsForPost);
+router.get('/post/:postId',authenticate, commentController.getCommentsForPost);
 
 module.exports = router;
