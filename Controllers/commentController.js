@@ -66,7 +66,7 @@ exports.likeComment = async (req, res) => {
 
         const commentId = req.params.id; // الحصول على الـ commentId من الـ URL parameter
 
-        const comment = await Comment.findById(commentId).populate('user', 'username profilePicture').lean(); // العثور على الكومنتر بناءً على الـ commentId
+        const comment = await Comment.findById(commentId).populate('user', 'username profilePicture'); // العثور على الكومنتر بناءً على الـ commentId
         if (!comment) {
             return res.status(404).send({ error: 'Comment not found' });
         }
