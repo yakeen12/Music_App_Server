@@ -82,7 +82,7 @@ exports.getAllPosts = async (req, res) => {
                 path: 'song', // ربط الأغنية
                 populate: { // بوبيوليت للفنان المرتبط بالأغنية
                     path: 'artist',
-                    select: 'name', // استرجاع اسم الفنان وسيرته الذاتية فقط
+                    select: 'name ', // استرجاع اسم الفنان وسيرته الذاتية فقط
                 },
             }) // استرجاع تفاصيل الأغنية (إذا موجودة)
             .populate({
@@ -116,7 +116,7 @@ exports.getPostById = async (req, res) => {
     const { postId } = req.params;
 
     try {
-        const posts = await Post.findById(postId)
+        const post = await Post.findById(postId)
             .populate('user', 'username profilePicture')  // استرجاع اسم اليوزر
             .populate({
                 path: 'song', // ربط الأغنية
@@ -129,21 +129,18 @@ exports.getPostById = async (req, res) => {
                 path: 'episode',
                 populate: {
                     path: "podcast",
-                    select: "title, img"
+                    select: "title img"
                 }
             })  // استرجاع تفاصيل البودكاست (إذا موجود)
             .sort({ createdAt: -1 });  // ترتيب البوستات بناءً على التاريخ (الأحدث أولاً)
         // إضافة حالة hasLiked لكل بوست
-        const postsWithLikes = posts.map(post => {
-            const hasLiked = post.likes.includes(userId);  // تحقق إذا كان اليوزر قد وضع لايك
-            return {
-                ...post.toObject(),  // تحويل الكائن إلى شكل عادي يمكن تعديله
-                hasLiked,  // إضافة حالة اللايك
-                likesCount: post.likes.length.toString(),
-            };
-        });
+        const updatedPost = {
+            ...post.toObject(), // تحويل البوست إلى كائن عادي
+            hasLiked: post.likes.includes(userId), // تحقق إذا كان اليوزر قد وضع لايك
+            likesCount: post.likes.length.toString(),
+        };
 
-        res.status(200).json(postsWithLikes);  // إرجاع البوستات مع حالة hasLiked
+        res.status(200).json(updatedPost);  // إرجاع البوستات مع حالة hasLiked
     } catch (err) {
         res.status(500).json({ message: 'Error fetching posts', error: err.message });
     }
