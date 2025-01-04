@@ -64,7 +64,7 @@ exports.likeComment = async (req, res) => {
         const userId = req.user.userId; // الحصول على الـ userId من الـ token
         const commentId = req.params.id; // الحصول على الـ commentId من الـ URL parameter
 
-        const comment = await Comment.findById(commentId); // العثور على الكومنتر بناءً على الـ commentId
+        const comment = await Comment.findById(commentId).populate('user', 'username profilePicture').lean(); // العثور على الكومنتر بناءً على الـ commentId
         if (!comment) {
             return res.status(404).send({ error: 'Comment not found' });
         }
@@ -72,15 +72,20 @@ exports.likeComment = async (req, res) => {
         // إذا كان المستخدم قد أعطى لايك للكومنتر مسبقاً، نقوم بإزالته
         if (comment.likes.includes(userId)) {
             comment.likes = comment.likes.filter(like => like.toString() !== userId.toString()); // إزالة الـ userId من likes
-            await comment.save();
-            return res.status(200).send({ message: 'Like removed' });
+
         }
 
         // إذا لم يكن قد أعطى لايك مسبقاً، نقوم بإضافته
         comment.likes.push(userId);
         await comment.save();
 
-        res.status(200).send({ message: 'Like added', comment });
+        const updatedComment = {
+            ...post.toObject(), // تحويل البوست إلى كائن عادي
+            hasLiked: comment.likes.includes(userId), // تحقق إذا كان اليوزر قد وضع لايك
+            likesCount: comment.likes.length.toString(),
+        };
+
+        res.status(200).send(updatedComment);
     } catch (error) {
         res.status(500).send({ error: 'Failed to add/remove like' });
     }
