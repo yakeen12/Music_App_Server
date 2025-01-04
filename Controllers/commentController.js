@@ -43,7 +43,12 @@ exports.getCommentsForPost = async (req, res) => {
 
     try {
         const comments = await Comment.find({ post: postId }).populate('user', 'name profilePicture');
-        res.status(200).json(comments);
+        const formattedComments = comments.map(comment => ({
+            ...comment,
+            likesCount: comment.likes.length.toString, // حساب عدد اللايكات
+          }));
+      
+          res.status(200).json(formattedComments);
     } catch (err) {
         res.status(500).json({ message: 'Server error' });
     }

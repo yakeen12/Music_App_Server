@@ -6,7 +6,7 @@ const authenticate = require('../MiddleWare/authenticate');  // استيراد �
 
 router.post('/like/:id', authenticate, commentController.likeComment);
 // إضافة تعليق على منشور 
-router.post('/add', commentController.addComment);
+router.post('/add/:postId', authenticate, commentController.addComment);
 
 // عرض التعليقات الخاصة بمنشور
 router.get('/post/:postId', commentController.getCommentsForPost);
