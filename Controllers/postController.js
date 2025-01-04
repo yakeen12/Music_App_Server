@@ -60,6 +60,7 @@ exports.getPostsByCommunity = async (req, res) => {
             return {
                 ...post.toObject(),  // تحويل الكائن إلى شكل عادي يمكن تعديله
                 hasLiked,  // إضافة حالة اللايك
+                likesCount: post.likes.length.toString(),// حساب عدد اللايكات
             };
         });
 
@@ -98,6 +99,7 @@ exports.getAllPosts = async (req, res) => {
             return {
                 ...post.toObject(),  // تحويل الكائن إلى شكل عادي يمكن تعديله
                 hasLiked,  // إضافة حالة اللايك
+                likesCount: post.likes.length.toString(),// حساب عدد اللايكات
             };
         });
 
