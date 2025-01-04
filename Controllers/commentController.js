@@ -75,10 +75,12 @@ exports.likeComment = async (req, res) => {
         if (comment.likes.includes(userId)) {
             comment.likes = comment.likes.filter(like => like.toString() !== userId.toString()); // إزالة الـ userId من likes
 
+        } else {
+            // إذا لم يكن قد أعطى لايك مسبقاً، نقوم بإضافته
+            comment.likes.push(userId);
         }
 
-        // إذا لم يكن قد أعطى لايك مسبقاً، نقوم بإضافته
-        comment.likes.push(userId);
+
         await comment.save();
 
         const updatedComment = {
