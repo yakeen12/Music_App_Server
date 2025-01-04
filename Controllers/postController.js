@@ -139,6 +139,7 @@ exports.getPostById = async (req, res) => {
             return {
                 ...post.toObject(),  // تحويل الكائن إلى شكل عادي يمكن تعديله
                 hasLiked,  // إضافة حالة اللايك
+                likesCount: post.likes.length.toString(),
             };
         });
 
@@ -180,6 +181,7 @@ exports.getPostsByUserId = async (req, res) => {
             return {
                 ...post.toObject(),  // تحويل الكائن إلى شكل عادي يمكن تعديله
                 hasLiked,  // إضافة حالة اللايك
+                likesCount: post.likes.length.toString(),
             };
         });
 
@@ -228,6 +230,7 @@ exports.toggleLike = async (req, res) => {
         const updatedPost = {
             ...post.toObject(), // تحويل البوست إلى كائن عادي
             hasLiked: post.likes.includes(userId), // تحقق إذا كان اليوزر قد وضع لايك
+            likesCount: post.likes.length.toString(),
         };
 
         res.status(200).json(updatedPost);  // إرجاع البوستات مع حالة hasLiked
