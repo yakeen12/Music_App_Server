@@ -80,7 +80,7 @@ exports.likeComment = async (req, res) => {
         await comment.save();
 
         const updatedComment = {
-            ...post.toObject(), // تحويل البوست إلى كائن عادي
+            ...comment.toObject(), // تحويل البوست إلى كائن عادي
             hasLiked: comment.likes.includes(userId), // تحقق إذا كان اليوزر قد وضع لايك
             likesCount: comment.likes.length.toString(),
         };
