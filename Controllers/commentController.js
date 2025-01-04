@@ -31,6 +31,7 @@ exports.addComment = async (req, res) => {
             comment: newComment,
         });
     } catch (err) {
+        console.log(err);
         res.status(500).json({ message: 'Server error' });
     }
 };
