@@ -112,39 +112,48 @@ exports.getAllPosts = async (req, res) => {
 
 
 exports.getPostById = async (req, res) => {
-    const { userId } = await req.user.userId
+    const userId = req.user?.userId; // تحقق من وجود userId
     const { postId } = req.params;
+
+    if (!userId) {
+        return res.status(400).json({ message: 'User ID is required' });
+    }
 
     try {
         const post = await Post.findById(postId)
-            .populate('user', 'username profilePicture')  // استرجاع اسم اليوزر
+            .populate('user', 'username profilePicture')
             .populate({
-                path: 'song', // ربط الأغنية
-                populate: { // بوبيوليت للفنان المرتبط بالأغنية
+                path: 'song',
+                populate: {
                     path: 'artist',
-                    select: 'name', // استرجاع اسم الفنان وسيرته الذاتية فقط
+                    select: 'name',
                 },
-            }) // استرجاع تفاصيل الأغنية (إذا موجودة)
+            })
             .populate({
                 path: 'episode',
                 populate: {
-                    path: "podcast",
-                    select: "title img"
-                }
-            })  // استرجاع تفاصيل البودكاست (إذا موجود)
-            .sort({ createdAt: -1 });  // ترتيب البوستات بناءً على التاريخ (الأحدث أولاً)
-        // إضافة حالة hasLiked لكل بوست
+                    path: 'podcast',
+                    select: 'title img',
+                },
+            });
+
+        if (!post) {
+            return res.status(404).json({ message: 'Post not found' });
+        }
+
         const updatedPost = {
-            ...post.toObject(), // تحويل البوست إلى كائن عادي
-            hasLiked: post.likes.includes(userId), // تحقق إذا كان اليوزر قد وضع لايك
+            ...post.toObject(),
+            hasLiked: post.likes.includes(userId),
             likesCount: post.likes.length.toString(),
         };
 
-        res.status(200).json(updatedPost);  // إرجاع البوستات مع حالة hasLiked
+        res.status(200).json(updatedPost);
     } catch (err) {
-        res.status(500).json({ message: 'Error fetching posts', error: err.message });
+        console.error(err);
+        res.status(500).json({ message: 'Error fetching post', error: err.message });
     }
 };
+
 
 
 exports.getPostsByUserId = async (req, res) => {
