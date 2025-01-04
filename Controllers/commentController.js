@@ -44,7 +44,7 @@ exports.getCommentsForPost = async (req, res) => {
     const user = await req.user.userId;
 
     try {
-        const comments = await Comment.find({ post: postId }).populate('user', 'username profilePicture').lean();
+        const comments = await Comment.find({ post: postId }).populate('user', 'username profilePicture').sort({ createdAt: -1 }).lean();
         const formattedComments = comments.map(comment => ({
             ...comment,
             likesCount: comment.likes.length.toString(),// حساب عدد اللايكات
