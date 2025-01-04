@@ -62,6 +62,7 @@ exports.getCommentsForPost = async (req, res) => {
 exports.likeComment = async (req, res) => {
     try {
         const userId = req.user.userId; // الحصول على الـ userId من الـ token
+        console.log(userId);
         const commentId = req.params.id; // الحصول على الـ commentId من الـ URL parameter
 
         const comment = await Comment.findById(commentId).populate('user', 'username profilePicture').lean(); // العثور على الكومنتر بناءً على الـ commentId
@@ -87,6 +88,7 @@ exports.likeComment = async (req, res) => {
 
         res.status(200).send(updatedComment);
     } catch (error) {
+        console.log(err);
         res.status(500).send({ error: 'Failed to add/remove like' });
     }
 };
