@@ -7,7 +7,7 @@ exports.addComment = async (req, res) => {
 
     const { postId } = req.params;
     const { content } = req.body;
-    const { userId } = req.user.userId;
+    const user = await req.user.userId;
     if (content == null) { return res.status(404).json({ message: 'content empty' }); }
     try {
         const post = await Post.findById(postId);
@@ -17,7 +17,7 @@ exports.addComment = async (req, res) => {
 
         const newComment = new Comment({
             content: content,
-            user: userId,
+            user: user,
             post: postId,
         });
 
