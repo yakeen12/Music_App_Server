@@ -43,10 +43,10 @@ exports.getCommentsForPost = async (req, res) => {
     const { postId } = req.params;
 
     try {
-        const comments = await Comment.find({ post: postId }).populate('user', 'name profilePicture');
+        const comments = await Comment.find({ post: postId }).populate('user', 'name profilePicture').lean();
         const formattedComments = comments.map(comment => ({
             ...comment,
-            likesCount: comment.likes.length.toString, // حساب عدد اللايكات
+            likesCount: comment.likes.length.toString(), // حساب عدد اللايكات
         }));
 
         res.status(200).json(formattedComments);
