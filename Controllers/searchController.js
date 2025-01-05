@@ -5,16 +5,15 @@ const User = require('../Models/user');
 const Artist = require('../Models/artist');
 const Podcast = require('../Models/podcast');
 
-// البحث في كافة العناصر مع التجزئة ودعم البحث الجزئي
 exports.search = async (req, res) => {
     const { query, page = 1, limit = 10, user } = req.query;  // الحصول على نص البحث من الـ query parameter، مع default page=1 و limit=10
 
-    if (!query) {
+    if (!query || query.trim() === '') {
         return res.status(400).json({ message: 'Query parameter is required' });
     }
 
     try {
-        const regexQuery = { '$regex': query, '$options': 'i' }; // البحث الجزئي مع تجاهل حالة الأحرف
+        const regexQuery = new RegExp(query, 'i');  // البحث الجزئي مع تجاهل حالة الأحرف
 
         // التجزئة: تحديد الصفحة والحد الأقصى للنتائج
         const skip = (page - 1) * limit;
@@ -22,57 +21,58 @@ exports.search = async (req, res) => {
         // البحث في البوستات مع التجزئة وربط البيانات
         const posts = await Post.find({
             $or: [
-                { 'content': { $regex: regexQuery, $options: 'i' } },
-                { 'user.username': { $regex: regexQuery, $options: 'i' } }
+                { 'content': { $regex: regexQuery } },
+                { 'user.username': { $regex: regexQuery } }
             ]
         })
-            .populate('user', 'username profilePicture')  // استرجاع اسم اليوزر
+            .populate('user', 'username profilePicture')
             .populate({
-                path: 'song', // ربط الأغنية
-                populate: { // بوبيوليت للفنان المرتبط بالأغنية
+                path: 'song',
+                populate: {
                     path: 'artist',
-                    select: 'name', // استرجاع اسم الفنان
+                    select: 'name',
                 },
-            }) // استرجاع تفاصيل الأغنية (إذا موجودة)
+            })
             .populate({
                 path: 'episode',
                 populate: {
                     path: "podcast",
                     select: "title img"
                 }
-            })  // استرجاع تفاصيل البودكاست (إذا موجود)
+            })
             .skip(skip)
             .limit(Number(limit))
-            .sort({ createdAt: -1 })  // ترتيب البوستات بناءً على التاريخ (الأحدث أولاً)
-            .lean();  // لتحويل النتائج إلى كائنات عادية
+            .sort({ createdAt: -1 })
+            .lean();
 
         // إضافة حالة hasLiked لكل بوست
         const postsWithLikes = posts.map(post => {
-            const hasLiked = post.likes.includes(user);  // تحقق إذا كان اليوزر قد وضع لايك
+            const hasLiked = post.likes.includes(user);
             return {
-                ...post,  // تحويل الكائن إلى شكل عادي يمكن تعديله
-                hasLiked,  // إضافة حالة اللايك
-                likesCount: post.likes.length.toString(), // حساب عدد اللايكات
+                ...post,
+                hasLiked,
+                likesCount: post.likes.length.toString(),
             };
         });
 
         // البحث في العناصر الأخرى مثل الأغاني، الحلقات، البودكاست
         const songs = await Song.find({
             $or: [
-                { 'title': { $regex: regexQuery, $options: 'i' } },
-                { 'artist.name': { $regex: regexQuery, $options: 'i' } }
+                { 'title': { $regex: regexQuery } },
+                { 'artist.name': { $regex: regexQuery } }
             ]
         }).skip(skip).limit(Number(limit)).populate({ path: 'artist', select: 'name' }).lean();
 
         const episodes = await Episode.find({
             $or: [
-                { 'title': { $regex: regexQuery, $options: 'i' } },
-                { 'podcast.title': { $regex: regexQuery, $options: 'i' } }
+                { 'title': { $regex: regexQuery } },
+                { 'podcast.title': { $regex: regexQuery } }
             ]
         }).skip(skip).limit(Number(limit)).populate({
             path: 'podcast',
             select: 'title img',
         }).lean();
+
         const users = await User.find({ 'username': regexQuery }).skip(skip).limit(Number(limit)).select('-password').lean();
 
         const artists = await Artist.find({
@@ -80,10 +80,10 @@ exports.search = async (req, res) => {
         }).skip(skip).limit(Number(limit)).populate({ path: "songs", populate: { path: 'artist', select: 'name' } }).lean();
 
         const podcasts = await Podcast.find({ 'title': regexQuery }).skip(skip).limit(Number(limit)).populate({
-            path: 'episodes', // ملء الحقل episodes
+            path: 'episodes',
             populate: {
-                path: 'podcast', // ملء الحقل podcast داخل episodes
-                select: 'title img', // تحديد الحقول المطلوبة
+                path: 'podcast',
+                select: 'title img',
             },
         }).lean();
 
