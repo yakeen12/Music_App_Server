@@ -20,7 +20,12 @@ exports.search = async (req, res) => {
         const skip = (page - 1) * limit;
 
         // البحث في البوستات مع التجزئة وربط البيانات
-        const posts = await Post.find({ 'content': regexQuery })
+        const posts = await Post.find({
+            $or: [
+                { 'content': { $regex: regexQuery, $options: 'i' } },
+                { 'user.username': { $regex: regexQuery, $options: 'i' } }
+            ]
+        })
             .populate('user', 'username profilePicture')  // استرجاع اسم اليوزر
             .populate({
                 path: 'song', // ربط الأغنية
@@ -52,13 +57,28 @@ exports.search = async (req, res) => {
         });
 
         // البحث في العناصر الأخرى مثل الأغاني، الحلقات، البودكاست
-        const songs = await Song.find({ 'title': regexQuery }).skip(skip).limit(Number(limit)).populate({ path: 'artist', select: 'name' }).lean();
-        const episodes = await Episode.find({ 'title': regexQuery }).skip(skip).limit(Number(limit)).populate({
+        const songs = await Song.find({
+            $or: [
+                { 'title': { $regex: regexQuery, $options: 'i' } },
+                { 'artist.name': { $regex: regexQuery, $options: 'i' } }
+            ]
+        }).skip(skip).limit(Number(limit)).populate({ path: 'artist', select: 'name' }).lean();
+
+        const episodes = await Episode.find({
+            $or: [
+                { 'title': { $regex: regexQuery, $options: 'i' } },
+                { 'podcast.title': { $regex: regexQuery, $options: 'i' } }
+            ]
+        }).skip(skip).limit(Number(limit)).populate({
             path: 'podcast',
             select: 'title img',
         }).lean();
         const users = await User.find({ 'username': regexQuery }).skip(skip).limit(Number(limit)).select('-password').lean();
-        const artists = await Artist.find({ 'name': regexQuery }).skip(skip).limit(Number(limit)).populate({ path: "songs", populate: { path: 'artist', select: 'name' } }).lean();
+
+        const artists = await Artist.find({
+            'name': regexQuery
+        }).skip(skip).limit(Number(limit)).populate({ path: "songs", populate: { path: 'artist', select: 'name' } }).lean();
+
         const podcasts = await Podcast.find({ 'title': regexQuery }).skip(skip).limit(Number(limit)).populate({
             path: 'episodes', // ملء الحقل episodes
             populate: {
