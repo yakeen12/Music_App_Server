@@ -55,6 +55,15 @@ exports.search = async (req, res) => {
             };
         });
 
+        const podcasts = await Podcast.find({ 'title': regexQuery }).skip(skip).limit(Number(limit)).populate({
+            path: 'episodes',
+            populate: {
+                path: 'podcast',
+                select: 'title img',
+            },
+        }).lean();
+
+
         // البحث في العناصر الأخرى مثل الأغاني، الحلقات، البودكاست
         const songs = await Song.find({
             $or: [
@@ -79,13 +88,7 @@ exports.search = async (req, res) => {
             'name': regexQuery
         }).skip(skip).limit(Number(limit)).populate({ path: "songs", populate: { path: 'artist', select: 'name' } }).lean();
 
-        const podcasts = await Podcast.find({ 'title': regexQuery }).skip(skip).limit(Number(limit)).populate({
-            path: 'episodes',
-            populate: {
-                path: 'podcast',
-                select: 'title img',
-            },
-        }).lean();
+
 
         // إرجاع النتيجة في صيغة JSON
         return res.json({
