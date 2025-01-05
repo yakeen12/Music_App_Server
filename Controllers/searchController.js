@@ -20,10 +20,10 @@ exports.search = async (req, res) => {
         const skip = (page - 1) * limit;
 
         // البحث في جميع العناصر مع التجزئة
-        const posts = await Post.find({ 'title': regexQuery }).skip(skip).limit(Number(limit)).lean();
+        const posts = await Post.find({ 'content': regexQuery }).skip(skip).limit(Number(limit)).lean();
         const songs = await Song.find({ 'title': regexQuery }).skip(skip).limit(Number(limit)).lean();
         const episodes = await Episode.find({ 'title': regexQuery }).skip(skip).limit(Number(limit)).lean();
-        const users = await User.find({ 'name': regexQuery }).skip(skip).limit(Number(limit)).lean();
+        const users = await User.find({ 'userName': regexQuery }).skip(skip).limit(Number(limit)).lean();
         const artists = await Artist.find({ 'name': regexQuery }).skip(skip).limit(Number(limit)).lean();
         const podcasts = await Podcast.find({ 'title': regexQuery }).skip(skip).limit(Number(limit)).lean();
 
