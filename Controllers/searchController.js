@@ -104,7 +104,7 @@ exports.search = async (req, res) => {
             episodes,
             users,
             artists,
-            podcasts,
+            // podcasts,
             page: Number(page),
             limit: Number(limit)
         });
