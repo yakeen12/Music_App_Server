@@ -20,7 +20,7 @@ exports.search = async (req, res) => {
         const posts = await Post.find({
             $or: [
                 { 'content': { $regex: regexQuery } },
-                { 'post.user.username': { $regex: regexQuery } }
+                { 'user.username': { $regex: regexQuery } }
             ]
         })
             // .populate('user', 'username profilePicture')
