@@ -18,10 +18,11 @@ exports.search = async (req, res) => {
 
         // البحث في البوستات
         const posts = await Post.find({
-            $or: [
-                { 'content': { $regex: regexQuery } },
-                { 'user.username': { $regex: regexQuery } }
-            ]
+            'user.username': { $regex: regexQuery }
+            // $or: [
+            //     { 'content': { $regex: regexQuery } },
+            //     {  }
+            // ]
         })
             .populate('user', 'username profilePicture')
             .populate({
