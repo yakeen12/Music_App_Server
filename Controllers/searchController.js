@@ -17,42 +17,32 @@ exports.search = async (req, res) => {
         const skip = (page - 1) * limit;
 
         // البحث في البوستات
-        const posts = await
-            //  Post.find({
-            //     $or: [
-            //         { 'content': { $regex: regexQuery } },
-            //         { post.user.username: { $regex: regexQuery } }
-            //     ]
-            // })
+        const posts = await Post.aggregate([
+            {
+                "$lookup": {
+                    "from": "users",
+                    "let": { "user": "$user" },
+                    "pipeline": [
+                        { "$match": { "$expr": { "$eq": ["$_id", "$$user"] } } },
+                        { "$project": { "username": 1 } }
+                    ],
+                    "as": "user"
+                }
+            },
+            { "$unwind": "$user" },
+            { "$match": { "user.username": { "$regex": regexQuery, "$options": "i" } } }
+        ]).skip(skip)
+            .limit(Number(limit))
+            .sort({ createdAt: -1 });
+        // .lean();
+        //  Post.find({
+        //     $or: [
+        //         { 'content': { $regex: regexQuery } },
+        //         { post.user.username: { $regex: regexQuery } }
+        //     ]
+        // })
 
-            Post.aggregate([
-                {
-                    "$lookup": {
-                        "from": "users",
-                        "let": { "user": "$user" },
-                        "pipeline": [
-                            { "$match": { "$expr": { "$eq": ["$_id", "$$user"] } } },
-                            { "$project": { "username": 1 } }
-                        ],
-                        "as": "user"
-                    }
-                },
-                { "$unwind": "$user" },
-                { "$match": { "user.username": { "$regex": regexQuery, "$options": "i" } } }
-            ])
-                // .populate('user', 'username profilePicture')
-                // .populate({
-                //     path: 'song',
-                //     populate: { path: 'artist', select: 'name' },
-                // })
-                // .populate({
-                //     path: 'episode',
-                //     populate: { path: 'podcast', select: 'title img' },
-                // })
-                .skip(skip)
-                .limit(Number(limit))
-                .sort({ createdAt: -1 })
-                .lean();
+
 
         const postsWithLikes = posts.map(post => {
             const hasLiked = post.likes.includes(user);
