@@ -15,50 +15,31 @@ exports.search = async (req, res) => {
     try {
         const regexQuery = new RegExp(query, 'i');  // البحث الجزئي مع تجاهل حالة الأحرف
         const skip = (page - 1) * limit;
-        const posts = await Post.aggregate([
-            {
-                $lookup: {
-                    from: 'users',  // اسم مجموعة اليوزر في الـ MongoDB
-                    localField: 'user',  // الحقل الذي يربط البوست باليوزر
-                    foreignField: '_id',  // الحقل الذي يربط اليوزر بالبوست
-                    as: 'user_info'  // اسم الحقل الذي سيتم تخزين البيانات فيه
-                }
-            },
-            {
-                $unwind: '$user_info'  // لتفكيك البيانات بعد الربط
-            },
-            {
-                $match: {
-                    $or: [
-                        { 'content': { $regex: regexQuery, $options: 'i' } },
-                        { 'user_info.username': { $regex: regexQuery, $options: 'i' } }  // البحث في اسم المستخدم داخل الـ user_info
-                    ]
-                }
-            },
-            {
-                $skip: skip
-            },
-            {
-                $limit: Number(limit)
-            },
-            {
-                $sort: { createdAt: -1 }
-            },
-            {
-                $project: {
-                    content: 1,
-                    createdAt: 1,
-                    likes: 1,
-                    'user_info.username': 1,
-                    'user_info.profilePicture': 1,  // إضافة صورة اليوزر هنا
-                    likesCount: { $size: "$likes" }  // حساب عدد اللايكات
-                }
-            }
-        ]);
+
+        // البحث في البوستات
+        const posts = await Post.find({
+            $or: [
+                { 'content': { $regex: regexQuery } },
+                { 'post.user.username': { $regex: regexQuery } }
+            ]
+        })
+            // .populate('user', 'username profilePicture')
+            // .populate({
+            //     path: 'song',
+            //     populate: { path: 'artist', select: 'name' },
+            // })
+            // .populate({
+            //     path: 'episode',
+            //     populate: { path: 'podcast', select: 'title img' },
+            // })
+            .skip(skip)
+            .limit(Number(limit))
+            .sort({ createdAt: -1 })
+            .lean();
 
         const postsWithLikes = posts.map(post => {
             const hasLiked = post.likes.includes(user);
-            return { ...post, hasLiked, likesCount: post.likes.toString() };
+            return { ...post, hasLiked, likesCount: post.likes.length.toString() };
         });
 
         // البحث في البودكاستات
