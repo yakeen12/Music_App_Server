@@ -42,18 +42,18 @@ exports.search = async (req, res) => {
             return { ...post, hasLiked, likesCount: post.likes.length.toString() };
         });
 
-        // البحث في البودكاستات
-        const podcasts = await Podcast.find({ 'title': regexQuery })
-            .skip(skip)
-            .limit(Number(limit))
-            .populate({
-                path: 'episodes',
-                populate: {
-                    path: 'podcast',
-                    select: 'title img',
-                },
-            })
-            .lean();
+        // // البحث في البودكاستات
+        // const podcasts = await Podcast.find({ 'title': regexQuery })
+        //     .skip(skip)
+        //     .limit(Number(limit))
+        //     .populate({
+        //         path: 'episodes',
+        //         populate: {
+        //             path: 'podcast',
+        //             select: 'title img',
+        //         },
+        //     })
+        //     .lean();
 
         // البحث في الحلقات
         const episodes = await Episode.find({
@@ -97,7 +97,7 @@ exports.search = async (req, res) => {
             })
             .lean();
 
-        // إرجاع النتيجة في صيغة JSON
+
         return res.json({
             posts: postsWithLikes,
             songs,
