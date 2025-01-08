@@ -24,7 +24,7 @@ exports.search = async (req, res) => {
                     "let": { "user": "$user" },
                     "pipeline": [
                         { "$match": { "$expr": { "$eq": ["$_id", "$$user"] } } },
-                        { "$project": { "username": 1 } }
+                        { "$project": { "username": 1, "profilePicture": 1 } }
                     ],
                     "as": "user"
                 }
@@ -32,9 +32,9 @@ exports.search = async (req, res) => {
             { "$unwind": "$user" },
             {
                 "$match": {
-                    "$or": [  
-                        { "user.username": { "$regex": regexQuery, "$options": "i" } },  // البحث في اسم المستخدم
-                        { "content": { "$regex": regexQuery, "$options": "i" } }  // البحث في المحتوى
+                    "$or": [
+                        { "user.username": { "$regex": regexQuery } },  // البحث في اسم المستخدم
+                        { "content": { "$regex": regexQuery } }  // البحث في المحتوى
                     ]
                 }
             }
