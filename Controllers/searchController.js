@@ -30,7 +30,7 @@ exports.search = async (req, res) => {
                 }
             },
             { "$unwind": "$user" },
-            { "$match": { "user.username": { "$regex": regexQuery, "$options": "i" } } }
+            { "$match": { "user.username": { "$regex": regexQuery } } }
         ]).skip(skip)
             .limit(Number(limit))
             .sort({ createdAt: -1 });
