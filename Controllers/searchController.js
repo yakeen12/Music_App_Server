@@ -30,7 +30,14 @@ exports.search = async (req, res) => {
                 }
             },
             { "$unwind": "$user" },
-            { "$match": { "user.username": { "$regex": regexQuery } } }
+            {
+                "$match": {
+                    "$or": [  
+                        { "user.username": { "$regex": regexQuery, "$options": "i" } },  // البحث في اسم المستخدم
+                        { "content": { "$regex": regexQuery, "$options": "i" } }  // البحث في المحتوى
+                    ]
+                }
+            }
         ]).skip(skip)
             .limit(Number(limit))
             .sort({ createdAt: -1 });
