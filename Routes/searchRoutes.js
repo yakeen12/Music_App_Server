@@ -5,4 +5,7 @@ const SearchController = require('../Controllers/searchController');  // تأك�
 // راوت البحث مع التجزئة
 router.get('/search', SearchController.search);
 
+
+router.get('/searchsongs', SearchController.search);
+
 module.exports = router;

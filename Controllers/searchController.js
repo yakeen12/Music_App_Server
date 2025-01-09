@@ -33,15 +33,15 @@ exports.search = async (req, res) => {
             {
                 "$match": {
                     "$or": [
-                        { "user.username": { "$regex": regexQuery } }, 
-                        { "content": { "$regex": regexQuery } }  
+                        { "user.username": { "$regex": regexQuery } },
+                        { "content": { "$regex": regexQuery } }
                     ]
                 }
             }
         ]).skip(skip)
             .limit(Number(limit))
             .sort({ createdAt: -1 });
-       
+
 
 
 
@@ -112,6 +112,43 @@ exports.search = async (req, res) => {
             users,
             artists,
             podcasts,
+            page: Number(page),
+            limit: Number(limit)
+        });
+    } catch (err) {
+        console.error(err);
+        return res.status(500).json({ message: 'Server error' });
+    }
+};
+
+
+
+exports.searchSongs = async (req, res) => {
+    const { query, page = 1, limit = 10, user } = req.query;
+
+    if (!query || query.trim() === '') {
+        return res.status(400).json({ message: 'Query parameter is required' });
+    }
+
+    try {
+        const regexQuery = new RegExp(query, 'i');  // البحث الجزئي مع تجاهل حالة الأحرف
+        const skip = (page - 1) * limit;
+
+
+        // البحث في الأغاني
+        const songs = await Song.find({
+            $or: [
+                { 'title': { $regex: regexQuery } },
+                { 'artist.name': { $regex: regexQuery } }
+            ]
+        }).skip(skip).limit(Number(limit))
+            .populate({ path: 'artist', select: 'name' })
+            .lean();
+
+
+        return res.json({
+
+            songs,
             page: Number(page),
             limit: Number(limit)
         });
