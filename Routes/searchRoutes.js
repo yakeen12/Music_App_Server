@@ -4,7 +4,7 @@ const SearchController = require('../Controllers/searchController');  // تأك�
 
 
 
-router.get('/searchsongs', SearchController.search);
+router.get('/searchsongs', SearchController.searchSongs);
 
 // راوت البحث مع التجزئة
 router.get('/search', SearchController.search);
