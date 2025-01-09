@@ -19,7 +19,8 @@ router.get('/:communityName', authenticate, postController.getPostsByCommunity);
 // لايك للبوست
 router.post('/:postId/like', authenticate, postController.toggleLike);
 
-
+// راوت لجلب البوستات بناءً على userId
+router.get('/:userId/posts', authenticate, postController.getPostsByUserId);
 
 
 module.exports = router;

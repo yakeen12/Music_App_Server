@@ -33,21 +33,15 @@ exports.search = async (req, res) => {
             {
                 "$match": {
                     "$or": [
-                        { "user.username": { "$regex": regexQuery } },  // البحث في اسم المستخدم
-                        { "content": { "$regex": regexQuery } }  // البحث في المحتوى
+                        { "user.username": { "$regex": regexQuery } }, 
+                        { "content": { "$regex": regexQuery } }  
                     ]
                 }
             }
         ]).skip(skip)
             .limit(Number(limit))
             .sort({ createdAt: -1 });
-        // .lean();
-        //  Post.find({
-        //     $or: [
-        //         { 'content': { $regex: regexQuery } },
-        //         { post.user.username: { $regex: regexQuery } }
-        //     ]
-        // })
+       
 
 
 

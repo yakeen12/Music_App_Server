@@ -157,45 +157,43 @@ exports.getPostById = async (req, res) => {
 
 
 exports.getPostsByUserId = async (req, res) => {
-    const { userId } = await req.user.userId
+    const { userId } = req.params; // الحصول على userId من الباراميتر
+    const currentUserId = req.user.userId; // الحصول على الـ userId الحالي من التوكين
 
     try {
-        const posts = await Post.find({ user: userId })  // العثور على البوستات المرتبطة بالـ userId
-            .populate('user', 'username profilePicture')  // استرجاع اسم اليوزر
+        // العثور على البوستات المرتبطة بـ userId المحدد
+        const posts = await Post.find({ user: userId })
+            .populate('user', 'username profilePicture')
             .populate({
-                path: 'song', // ربط الأغنية
-                populate: { // بوبيوليت للفنان المرتبط بالأغنية
-                    path: 'artist',
-                    select: 'name', // استرجاع اسم الفنان وسيرته الذاتية فقط
-                },
-            }) // استرجاع تفاصيل الأغنية (إذا موجودة)
+                path: 'song',
+                populate: { path: 'artist', select: 'name' },
+            })
             .populate({
                 path: 'episode',
-                populate: {
-                    path: "podcast",
-                    select: "title"
-                }
-            })  // استرجاع تفاصيل البودكاست (إذا موجود)
-            .sort({ createdAt: -1 });  // ترتيب البوستات بناءً على التاريخ (الأحدث أولاً)
+                populate: { path: "podcast", select: "title" },
+            })
+            .sort({ createdAt: -1 });
+
         if (posts.length === 0) {
             return res.status(404).json({ message: 'No posts found for this user' });
         }
 
         // إضافة حالة hasLiked لكل بوست
         const postsWithLikes = posts.map(post => {
-            const hasLiked = post.likes.includes(userId);  // تحقق إذا كان اليوزر قد وضع لايك
+            const hasLiked = post.likes.includes(currentUserId); // التحقق من حالة اللايك
             return {
-                ...post.toObject(),  // تحويل الكائن إلى شكل عادي يمكن تعديله
-                hasLiked,  // إضافة حالة اللايك
+                ...post.toObject(), // تحويل الكائن إلى كائن عادي
+                hasLiked,           // إضافة حالة الإعجاب
                 likesCount: post.likes.length.toString(),
             };
         });
 
-        res.status(200).json(postsWithLikes);  // إرجاع البوستات مع حالة hasLiked
+        res.status(200).json(postsWithLikes); // إرجاع البوستات مع حالة الإعجاب
     } catch (err) {
         res.status(500).json({ message: 'Error fetching posts by user', error: err.message });
     }
 };
+
 
 exports.toggleLike = async (req, res) => {
     const { postId } = req.params;
