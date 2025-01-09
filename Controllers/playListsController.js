@@ -102,7 +102,7 @@ exports.getPublicPlaylists = async (req, res) => {
             populate: { path: 'artist', select: 'name' } // جلب اسم الفنان فقط
         }).populate({
             path: 'createdBy',
-            select: 'username profileImage'  // جلب اسم وصورة اليوزر
+            select: 'username profilePicture'  // جلب اسم وصورة اليوزر
         });
 
         res.json(playlists); // إرجاع البلاي ليستات
