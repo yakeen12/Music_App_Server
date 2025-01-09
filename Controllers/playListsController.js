@@ -37,6 +37,9 @@ exports.getUserPlaylists = async (req, res) => {
         const playlists = await Playlist.find({ createdBy: req.user.userId }).populate({
             path: 'songs',
             populate: { path: 'artist', select: 'name' }
+        }).populate({
+            path: 'createdBy',
+            select: 'username profilePicture'  // جلب اسم وصورة اليوزر
         });
         console.log("getUserPlaylists playlists", playlists);
 
@@ -79,8 +82,10 @@ exports.updatePlaylist = async (req, res) => {
         const updatedPlayList = await Playlist.find({ createdBy: req.user.id }).populate({
             path: 'songs',
             populate: { path: 'artist', select: 'name' }
+        }).populate({
+            path: 'createdBy',
+            select: 'username profilePicture'  // جلب اسم وصورة اليوزر
         });
-
         res.json(updatedPlayList);
     } catch (error) {
         console.log('Error updating playlist', error);
@@ -184,6 +189,9 @@ exports.removeSongFromPlaylist = async (req, res) => {
                     path: 'artist',
                     select: 'name'
                 }
+            }).populate({
+                path: 'createdBy',
+                select: 'username profilePicture'  // جلب اسم وصورة اليوزر
             });
 
         res.json(updatedPlaylist);
@@ -239,6 +247,9 @@ exports.addSongToPlaylist = async (req, res) => {
                     path: 'artist',
                     select: 'name'
                 }
+            }).populate({
+                path: 'createdBy',
+                select: 'username profilePicture'  // جلب اسم وصورة اليوزر
             });
 
         res.json(updatedPlaylist);
