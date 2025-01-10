@@ -49,7 +49,7 @@ exports.sendSecretGift = async (req, res) => {
 exports.getReceivedGifts = async (req, res) => {
     console.log("bodyyyyyyyyy:", req.body);  // طباعة البيانات للتأكد من وصولها
 
-    const receiverId = req.user._id;
+    const receiverId = req.user.userId;
 
     try {
         const receivedGifts = await SecretGift.find({ receiver: receiverId })
