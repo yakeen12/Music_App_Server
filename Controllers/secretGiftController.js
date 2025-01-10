@@ -8,7 +8,6 @@ exports.sendSecretGift = async (req, res) => {
     console.log("bodyyyyyyyyy:", req.body);  // طباعة البيانات للتأكد من وصولها
 
     const { receiverId, songList, content } = req.body;
-    const senderId = req.user._id;
 
     try {
         // Check if the receiver exists
@@ -26,7 +25,6 @@ exports.sendSecretGift = async (req, res) => {
 
         // Create a new SecretGift document
         const secretGift = new SecretGift({
-            sender: senderId,
             receiver: receiverId,
             songList: songList,
             content: content
