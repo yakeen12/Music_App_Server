@@ -53,7 +53,6 @@ exports.getReceivedGifts = async (req, res) => {
 
     try {
         const receivedGifts = await SecretGift.find({ receiver: receiverId })
-            .populate('sender', 'username') // Populate sender's name
             .populate({                                          // Populate song titles and artists
                 path: 'songList',
                 populate: { path: 'artist', select: 'name' }
