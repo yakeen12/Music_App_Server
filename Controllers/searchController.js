@@ -13,7 +13,7 @@ exports.search = async (req, res) => {
     }
 
     try {
-        const regexQuery = new RegExp(query, 'i');  // البحث الجزئي مع تجاهل حالة الأحرف
+        const regexQuery = new RegExp(query, 'i'); 
         const skip = (page - 1) * limit;
 
         // البحث في البوستات

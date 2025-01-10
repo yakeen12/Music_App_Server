@@ -6,7 +6,7 @@ const Song = require('../Models/song');
 exports.sendSecretGift = async (req, res) => {
     console.log("bodyyyyyyyyy:", req.body);  // طباعة البيانات للتأكد من وصولها
 
-    const { receiverId, songList } = req.body;
+    const { receiverId, songList, content } = req.body;
     const senderId = req.user._id;
 
     try {
@@ -27,6 +27,7 @@ exports.sendSecretGift = async (req, res) => {
             sender: senderId,
             receiver: receiverId,
             songList: songList,
+            content: content
         });
 
         // Save the secret gift to the database
