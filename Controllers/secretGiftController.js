@@ -1,7 +1,6 @@
 const SecretGift = require('../Models/secret_gift');
 const User = require('../Models/user');
 const Song = require('../Models/song');
-const mongoose = require('mongoose');
 
 
 // Send a secret gift
@@ -13,7 +12,7 @@ exports.sendSecretGift = async (req, res) => {
 
     try {
         // Check if the receiver exists
-        const receiver = await User.findById(mongoose.Types.ObjectId(receiverId));
+        const receiver = await User.findById(receiverId);
         if (!receiver) {
             return res.status(404).json({ message: 'Receiver not found' });
         }
