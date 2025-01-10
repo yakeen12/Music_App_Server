@@ -4,16 +4,19 @@ const Episode = require('../Models/episode');
 const User = require('../Models/user');
 const Artist = require('../Models/artist');
 const Podcast = require('../Models/podcast');
+const Playlist = require('../Models/playLists');
 
 exports.search = async (req, res) => {
-    const { query, page = 1, limit = 10, user } = req.query;
+    const { query, page = 1, limit = 10 } = req.query;
+    const currentUserId = req.user.userId;
+
 
     if (!query || query.trim() === '') {
         return res.status(400).json({ message: 'Query parameter is required' });
     }
 
     try {
-        const regexQuery = new RegExp(query, 'i'); 
+        const regexQuery = new RegExp(query, 'i');
         const skip = (page - 1) * limit;
 
         // البحث في البوستات
@@ -89,7 +92,7 @@ exports.search = async (req, res) => {
             .lean();
 
         // البحث في المستخدمين
-        const users = await User.find({ 'username': regexQuery })
+        const users = await User.find({ 'username': regexQuery, _id: { $ne: mongoose.Types.ObjectId(currentUserId) } })
             .skip(skip)
             .limit(Number(limit))
             .select('-password')
@@ -120,6 +123,124 @@ exports.search = async (req, res) => {
         return res.status(500).json({ message: 'Server error' });
     }
 };
+
+
+exports.searchUsers = async (req, res) => {
+    const { query, page = 1, limit = 10 } = req.query;
+    const currentUserId = req.user.userId;
+
+
+    if (!query || query.trim() === '') {
+        return res.status(400).json({ message: 'Query parameter is required' });
+    }
+
+    try {
+        const regexQuery = new RegExp(query, 'i');
+        const skip = (page - 1) * limit;
+
+
+        // البحث في المستخدمين
+        const users = await User.find({ 'username': regexQuery, _id: { $ne: mongoose.Types.ObjectId(currentUserId) } })
+            .skip(skip)
+            .limit(Number(limit))
+            .select('-password')
+            .lean();
+
+
+        return res.json({
+            users,
+            page: Number(page),
+            limit: Number(limit)
+        });
+    } catch (err) {
+        console.error(err);
+        return res.status(500).json({ message: 'Server error' });
+    }
+};
+
+
+exports.searchPlayLists = async (req, res) => {
+    const { query, page = 1, limit = 10, } = req.query;
+    const currentUserId = req.user.userId;
+
+    if (!query || query.trim() === '') {
+        return res.status(400).json({ message: 'Query parameter is required' });
+    }
+
+    try {
+        const regexQuery = new RegExp(query, 'i');
+        const skip = (page - 1) * limit;
+
+        // البحث في الأغاني التي قام المستخدم بوضع لايك لها
+        const likedSongs = await Song.find({
+            likes: currentUserId,
+            title: { $regex: regexQuery },
+        })
+            .skip(skip)
+            .limit(Number(limit))
+            .populate({ path: 'artist', select: 'name' })
+            .lean();
+
+        // البحث في قوائم التشغيل الخاصة بالمستخدم
+        const playlists = await Playlist.find({
+            createdBy: currentUserId,
+            name: { $regex: regexQuery },
+        })
+            .skip(skip)
+            .limit(Number(limit))
+            .populate({
+                path: 'songs',
+                populate: { path: 'artist', select: 'name' },
+            })
+            .lean();
+
+        // البحث في الأغاني داخل قوائم التشغيل
+        const playlistSongs = await Playlist.aggregate([
+            {
+                $match: { createdBy: mongoose.Types.ObjectId(currentUserId) },
+            },
+            {
+                $lookup: {
+                    from: 'songs',
+                    localField: 'songs',
+                    foreignField: '_id',
+                    as: 'songs',
+                },
+            },
+            {
+                $unwind: '$songs',
+            },
+            {
+                $match: { 'songs.title': { $regex: regexQuery } },
+            },
+            {
+                $group: {
+                    _id: '$_id',
+                    name: { $first: '$name' },
+                    createdBy: { $first: '$user' },
+                    songs: { $push: '$songs' },
+                },
+            },
+        ])
+            .skip(skip)
+            .limit(Number(limit));
+
+
+
+        return res.json({
+            playlistSongs,
+            playlists,
+            likedSongs,
+            page: Number(page),
+            limit: Number(limit)
+        });
+    } catch (err) {
+        console.error(err);
+        return res.status(500).json({ message: 'Server error' });
+    }
+};
+
+
 
 
 
