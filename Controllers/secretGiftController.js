@@ -38,6 +38,7 @@ exports.sendSecretGift = async (req, res) => {
             secretGift,
         });
     } catch (err) {
+        console.log(err);
         res.status(500).json({ message: 'Server error', err });
     }
 };
