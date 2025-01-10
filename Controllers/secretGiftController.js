@@ -11,7 +11,7 @@ exports.sendSecretGift = async (req, res) => {
 
     try {
         // Check if the receiver exists
-        const receiver = await User.findById(receiverId);
+        const receiver = await User.findById(mongoose.Types.ObjectId(receiverId));
         if (!receiver) {
             return res.status(404).json({ message: 'Receiver not found' });
         }
