@@ -4,10 +4,7 @@ const { sendSecretGift, getSentGifts, getReceivedGifts } = require('../Controlle
 const authenticate = require('../MiddleWare/authenticate');
 
 // Send a secret gift
-router.post('/send', authenticate, sendSecretGift);
-
-// Get all gifts sent by the logged-in user
-router.get('/sent', authenticate, getSentGifts);
+router.post('/send', sendSecretGift);
 
 // Get all gifts received by the logged-in user
 router.get('/received', authenticate, getReceivedGifts);

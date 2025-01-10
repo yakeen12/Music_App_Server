@@ -43,22 +43,7 @@ exports.sendSecretGift = async (req, res) => {
     }
 };
 
-// Get all secret gifts sent by the logged-in user
-exports.getSentGifts = async (req, res) => {
-    console.log("bodyyyyyyyyy:", req.body);  // طباعة البيانات للتأكد من وصولها
 
-    const senderId = req.user._id;
-
-    try {
-        const sentGifts = await SecretGift.find({ sender: senderId })
-            .populate('receiver', 'username') // Populate receiver's name
-            .populate('songList', 'title artist'); // Populate song titles and artists
-
-        res.status(200).json(sentGifts);
-    } catch (err) {
-        res.status(500).json({ message: 'Server error' });
-    }
-};
 
 // Get all secret gifts received by the logged-in user
 exports.getReceivedGifts = async (req, res) => {
@@ -69,8 +54,10 @@ exports.getReceivedGifts = async (req, res) => {
     try {
         const receivedGifts = await SecretGift.find({ receiver: receiverId })
             .populate('sender', 'username') // Populate sender's name
-            .populate('songList', 'title artist'); // Populate song titles and artists
-
+            .populate({                                          // Populate song titles and artists
+                path: 'songList',
+                populate: { path: 'artist', select: 'name' }
+            });
         res.status(200).json(receivedGifts);
     } catch (err) {
         res.status(500).json({ message: 'Server error' });
