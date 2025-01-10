@@ -1,6 +1,8 @@
 const SecretGift = require('../Models/secret_gift');
 const User = require('../Models/user');
 const Song = require('../Models/song');
+const mongoose = require('mongoose');
+
 
 // Send a secret gift
 exports.sendSecretGift = async (req, res) => {
@@ -39,7 +41,7 @@ exports.sendSecretGift = async (req, res) => {
         });
     } catch (err) {
         console.log(err);
-        res.status(500).json({ message: 'Server error', err });
+        res.status(500).json({ message: 'Server error' });
     }
 };
 
