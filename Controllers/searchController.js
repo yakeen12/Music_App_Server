@@ -197,7 +197,7 @@ exports.searchPlayLists = async (req, res) => {
         // البحث في الأغاني داخل قوائم التشغيل
         const playlistSongs = await Playlist.aggregate([
             {
-                $match: { createdBy: mongoose.Types.ObjectId(currentUserId) },
+                $match: { createdBy: currentUserId },
             },
             {
                 $lookup: {
