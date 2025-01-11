@@ -219,7 +219,7 @@ exports.searchPlayLists = async (req, res) => {
                 $group: {
                     _id: '$_id',
                     name: { $first: '$name' },
-                    createdBy: { $first: '$user' },
+                    createdBy: { $first: '$createdBy' },
                     songs: { $push: '$songs' },
                 },
             },
