@@ -92,7 +92,7 @@ exports.search = async (req, res) => {
             .lean();
 
         // البحث في المستخدمين
-        const users = await User.find({ 'username': regexQuery, _id: { $ne: mongoose.Types.ObjectId(currentUserId) } })
+        const users = await User.find({ 'username': regexQuery, _id: { $ne: currentUserId } })
             .skip(skip)
             .limit(Number(limit))
             .select('-password')
