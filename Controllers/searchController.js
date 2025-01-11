@@ -190,9 +190,11 @@ exports.searchPlayLists = async (req, res) => {
             .limit(Number(limit))
             .populate({
                 path: 'songs',
-                populate: { path: 'artist', select: 'name' },
-            })
-            .lean();
+                populate: { path: 'artist', select: 'name' }
+            }).populate({
+                path: 'createdBy',
+                select: 'username profilePicture'  // جلب اسم وصورة اليوزر
+            });
 
         // البحث في الأغاني داخل قوائم التشغيل
         const playlistSongs = await Playlist.aggregate([
