@@ -49,7 +49,7 @@ exports.search = async (req, res) => {
 
 
         const postsWithLikes = posts.map(post => {
-            const hasLiked = post.likes.includes(user);
+            const hasLiked = post.likes.includes(currentUserId);
             return { ...post, hasLiked, likesCount: post.likes.length.toString() };
         });
 
