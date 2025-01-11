@@ -199,30 +199,49 @@ exports.searchPlayLists = async (req, res) => {
         // البحث في الأغاني داخل قوائم التشغيل
         const playlistSongs = await Playlist.aggregate([
             {
-                $match: { createdBy: currentUserId },
+                "$lookup": {
+                    "from": "songs",
+                    "let": { "song": "$song" },
+                    "pipeline": [
+                        { "$match": { "$expr": { "$eq": ["$_id", "$$song"] } } },
+                        { "$project": { "title": 1, "url": 1 } }
+                    ],
+                    "as": "song"
+                }
             },
+            { "$unwind": "$song" },
             {
-                $lookup: {
-                    from: 'songs',
-                    localField: 'songs',
-                    foreignField: '_id',
-                    as: 'songs',
-                },
-            },
-            {
-                $unwind: '$songs',
-            },
-            {
-                $match: { 'songs.title': { $regex: regexQuery } },
-            },
-            {
-                $group: {
-                    _id: '$_id',
-                    name: { $first: '$name' },
-                    createdBy: { $first: '$createdBy' },
-                    songs: { $push: '$songs' },
-                },
-            },
+                "$match": {
+                    "$or": [
+                        { "song.title": { "$regex": regexQuery } },
+                    ]
+                }
+            }
+            // {
+            //     $match: { createdBy: currentUserId },
+            // },
+            // {
+            //     $lookup: {
+            //         from: 'songs',
+            //         localField: 'songs',
+            //         foreignField: '_id',
+            //         as: 'songs',
+            //     },
+            // },
+            // {
+            //     $unwind: '$songs',
+            // },
+            // {
+            //     $match: { 'songs.title': { $regex: regexQuery } },
+            // },
+            // {
+            //     $group: {
+            //         _id: '$_id',
+            //         name: { $first: '$name' },
+            //         createdBy: { $first: '$createdBy' },
+            //         songs: { $push: '$songs' },
+            //     },
+            // },
         ])
             .skip(skip)
             .limit(Number(limit));
