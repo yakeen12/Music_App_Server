@@ -32,7 +32,7 @@ exports.getUserPlaylists = async (req, res) => {
     try {
 
         const playlist = await Playlist.findOne({ createdBy: req.user.userId });
-        console.log("Playlist songs references:", playlist.songs);
+        // console.log("Playlist songs references:", playlist.songs);
 
         const playlists = await Playlist.find({ createdBy: req.user.userId }).populate({
             path: 'songs',
