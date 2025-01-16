@@ -20,7 +20,7 @@ exports.search = async (req, res) => {
         const skip = (page - 1) * limit;
 
         // البحث في البوستات
-        const posts = await Post.aggregate([
+        const rawPosts = await Post.aggregate([
             {
                 "$lookup": {
                     "from": "users",
@@ -41,19 +41,17 @@ exports.search = async (req, res) => {
                     ]
                 }
             }
-        ]).populate('user', 'username profilePicture')
-            .populate({
-                path: 'song',
-                populate: { path: 'artist', select: 'name' },
-            })
-            .populate({
-                path: 'episode',
-                populate: { path: "podcast", select: "title" },
-            }).skip(skip)
+        ]).skip(skip)
             .limit(Number(limit))
             .sort({ createdAt: -1 });
 
-
+        const posts = await Post.populate(
+            Post.hydrate(rawPosts),
+            [
+                { path: 'song', populate: { path: 'artist', select: 'name' } },
+                { path: 'episode', populate: { path: "podcast", select: "title" } }
+            ]
+        );
 
 
         const postsWithLikes = posts.map(post => {
