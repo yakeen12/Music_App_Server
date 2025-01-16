@@ -76,7 +76,25 @@ exports.search = async (req, res) => {
                     "as": "episode.podcast"
                 }
             },
-            { "$unwind": { path: "$episode.podcast", preserveNullAndEmptyArrays: true } }
+            { "$unwind": { path: "$episode.podcast", preserveNullAndEmptyArrays: true } },
+            {
+                "$lookup": {
+                    "from": "comments", // جدول الحلقات
+                    "localField": "comment",
+                    "foreignField": "_id",
+                    "as": "comment"
+                }
+            },
+            { "$unwind": { path: "$comment", preserveNullAndEmptyArrays: true } },
+            {
+                "$lookup": {
+                    "from": "users", // جدول الكومنتات
+                    "localField": "comment.user",
+                    "foreignField": "_id",
+                    "as": "comment.user"
+                }
+            },
+            { "$unwind": { path: "$comment.user", preserveNullAndEmptyArrays: true } }
         ])
             .skip(skip)
             .limit(Number(limit))
