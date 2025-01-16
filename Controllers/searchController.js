@@ -20,7 +20,7 @@ exports.search = async (req, res) => {
         const skip = (page - 1) * limit;
 
         // البحث في البوستات
-        const rawPosts = await Post.aggregate([
+        const posts = await Post.aggregate([
             {
                 "$lookup": {
                     "from": "users",
