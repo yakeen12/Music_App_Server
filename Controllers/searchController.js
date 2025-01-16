@@ -36,8 +36,8 @@ exports.search = async (req, res) => {
             {
                 "$match": {
                     "$or": [
-                        { "user.username": { "$regex": regexQuery, $options: "i" } },
-                        { "content": { "$regex": regexQuery, $options: "i" } }
+                        { "user.username": { "$regex": regexQuery, } },
+                        { "content": { "$regex": regexQuery, } }
                     ]
                 }
             },
