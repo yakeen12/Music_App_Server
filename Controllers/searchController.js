@@ -36,22 +36,51 @@ exports.search = async (req, res) => {
             {
                 "$match": {
                     "$or": [
-                        { "user.username": { "$regex": regexQuery } },
-                        { "content": { "$regex": regexQuery } }
+                        { "user.username": { "$regex": regexQuery, $options: "i" } },
+                        { "content": { "$regex": regexQuery, $options: "i" } }
                     ]
                 }
-            }
-        ]).skip(skip)
+            },
+            {
+                "$lookup": {
+                    "from": "songs", // جدول الأغاني
+                    "localField": "song",
+                    "foreignField": "_id",
+                    "as": "song"
+                }
+            },
+            { "$unwind": { path: "$song", preserveNullAndEmptyArrays: true } }, // إذا لم يكن هناك أغنية، لا يحذف البوست
+            {
+                "$lookup": {
+                    "from": "artists", // جدول الفنانين
+                    "localField": "song.artist",
+                    "foreignField": "_id",
+                    "as": "song.artist"
+                }
+            },
+            { "$unwind": { path: "$song.artist", preserveNullAndEmptyArrays: true } },
+            {
+                "$lookup": {
+                    "from": "episodes", // جدول الحلقات
+                    "localField": "episode",
+                    "foreignField": "_id",
+                    "as": "episode"
+                }
+            },
+            { "$unwind": { path: "$episode", preserveNullAndEmptyArrays: true } },
+            {
+                "$lookup": {
+                    "from": "podcasts", // جدول البودكاست
+                    "localField": "episode.podcast",
+                    "foreignField": "_id",
+                    "as": "episode.podcast"
+                }
+            },
+            { "$unwind": { path: "$episode.podcast", preserveNullAndEmptyArrays: true } }
+        ])
+            .skip(skip)
             .limit(Number(limit))
             .sort({ createdAt: -1 });
-
-        const posts = await Post.populate(
-            Post.hydrate(rawPosts),
-            [
-                { path: 'song', populate: { path: 'artist', select: 'name' } },
-                { path: 'episode', populate: { path: "podcast", select: "title" } }
-            ]
-        );
 
 
         const postsWithLikes = posts.map(post => {
