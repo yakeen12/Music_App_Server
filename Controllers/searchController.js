@@ -41,8 +41,7 @@ exports.search = async (req, res) => {
                     ]
                 }
             }
-        ]).skip(skip)
-            .limit(Number(limit)).populate('user', 'username profilePicture')
+        ]).populate('user', 'username profilePicture')
             .populate({
                 path: 'song',
                 populate: { path: 'artist', select: 'name' },
@@ -50,7 +49,8 @@ exports.search = async (req, res) => {
             .populate({
                 path: 'episode',
                 populate: { path: "podcast", select: "title" },
-            })
+            }).skip(skip)
+            .limit(Number(limit))
             .sort({ createdAt: -1 });
 
 
