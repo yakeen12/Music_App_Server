@@ -42,7 +42,15 @@ exports.search = async (req, res) => {
                 }
             }
         ]).skip(skip)
-            .limit(Number(limit))
+            .limit(Number(limit)).populate('user', 'username profilePicture')
+            .populate({
+                path: 'song',
+                populate: { path: 'artist', select: 'name' },
+            })
+            .populate({
+                path: 'episode',
+                populate: { path: "podcast", select: "title" },
+            })
             .sort({ createdAt: -1 });
 
 
