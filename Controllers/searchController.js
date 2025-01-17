@@ -79,7 +79,7 @@ exports.search = async (req, res) => {
             { "$unwind": { path: "$episode.podcast", preserveNullAndEmptyArrays: true } },
             {
                 "$lookup": {
-                    "from": "comments", // جدول الحلقات
+                    "from": "comments", //  جدول الكومنتات
                     "localField": "comment",
                     "foreignField": "_id",
                     "as": "comment"
@@ -88,13 +88,25 @@ exports.search = async (req, res) => {
             { "$unwind": { path: "$comment", preserveNullAndEmptyArrays: true } },
             {
                 "$lookup": {
-                    "from": "users", // جدول الكومنتات
+                    "from": "users",
                     "localField": "comment.user",
                     "foreignField": "_id",
                     "as": "comment.user"
                 }
             },
-            { "$unwind": { path: "$comment.user", preserveNullAndEmptyArrays: true } }
+            { "$unwind": { path: "$comment.user", preserveNullAndEmptyArrays: true } }, {
+                "$group": {
+                    "_id": "$_id",
+                    "content": { "$first": "$content" },
+                    "community": { "$first": "$community" },
+                    "user": { "$first": "$user" },
+                    "song": { "$first": "$song" },
+                    "comments": { "$push": "$comments" },
+                    "likes": { "$first": "$likes" },
+                    "likesCount": { "$first": "$likesCount" },
+                    "createdAt": { "$first": "$createdAt" }
+                }
+            }
         ])
             .skip(skip)
             .limit(Number(limit))
