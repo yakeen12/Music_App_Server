@@ -76,37 +76,8 @@ exports.search = async (req, res) => {
                     "as": "episode.podcast"
                 }
             },
-            { "$unwind": { path: "$episode.podcast", preserveNullAndEmptyArrays: true } },
-            {
-                "$lookup": {
-                    "from": "comments", //  جدول الكومنتات
-                    "localField": "comment",
-                    "foreignField": "_id",
-                    "as": "comment"
-                }
-            },
-            { "$unwind": { path: "$comment", preserveNullAndEmptyArrays: true } },
-            {
-                "$lookup": {
-                    "from": "users",
-                    "localField": "comment.user",
-                    "foreignField": "_id",
-                    "as": "comment.user"
-                }
-            },
-            { "$unwind": { path: "$comment.user", preserveNullAndEmptyArrays: true } }, {
-                "$group": {
-                    "_id": "$_id",
-                    "content": { "$first": "$content" },
-                    "community": { "$first": "$community" },
-                    "user": { "$first": "$user" },
-                    "song": { "$first": "$song" },
-                    "comments": { "$push": "$comments" },
-                    "likes": { "$first": "$likes" },
-                    "likesCount": { "$first": "$likesCount" },
-                    "createdAt": { "$first": "$createdAt" }
-                }
-            }
+            { "$unwind": { path: "$episode.podcast", preserveNullAndEmptyArrays: true } }
+
         ])
             .skip(skip)
             .limit(Number(limit))
