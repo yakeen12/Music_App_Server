@@ -82,10 +82,10 @@ exports.search = async (req, res) => {
                     "from": "comments", //  جدول الكومنتات
                     "localField": "comments",
                     "foreignField": "_id",
-                    "as": "comment"
+                    "as": "comments"
                 }
             },
-            { "$unwind": { path: "$comment", preserveNullAndEmptyArrays: true } },
+            { "$unwind": { path: "$comments", preserveNullAndEmptyArrays: true } },
             {
                 "$lookup": {
                     "from": "users",
