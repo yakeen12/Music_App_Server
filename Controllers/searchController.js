@@ -94,19 +94,7 @@ exports.search = async (req, res) => {
                     "as": "comment.user"
                 }
             },
-            { "$unwind": { path: "$comment.user", preserveNullAndEmptyArrays: true } }, {
-                "$group": {
-                    "_id": "$_id",
-                    "content": { "$first": "$content" },
-                    "community": { "$first": "$community" },
-                    "user": { "$first": "$user" },
-                    "song": { "$first": "$song" },
-                    "comments": { "$push": "$comments" },
-                    "likes": { "$first": "$likes" },
-                    "likesCount": { "$first": "$likesCount" },
-                    "createdAt": { "$first": "$createdAt" }
-                }
-            }
+            { "$unwind": { path: "$comment.user", preserveNullAndEmptyArrays: true } },
         ])
             .skip(skip)
             .limit(Number(limit))
