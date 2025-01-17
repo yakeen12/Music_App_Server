@@ -95,6 +95,34 @@ exports.search = async (req, res) => {
                 }
             },
             { "$unwind": { path: "$comment.user", preserveNullAndEmptyArrays: true } },
+            {
+                "$addFields": {
+                    "comments": {
+                        "$map": {
+                            "input": "$comments",
+                            "as": "comment",
+                            "in": {
+                                "_id": "$$comment._id",
+                                "content": "$$comment.content",
+                                "likes": "$$comment.likes",
+                                "createdAt": "$$comment.createdAt",
+                                "user": {
+                                    "$arrayElemAt": [
+                                        {
+                                            "$filter": {
+                                                "input": "$commentUsers",
+                                                "as": "user",
+                                                "cond": { "$eq": ["$$user._id", "$$comment.user"] }
+                                            }
+                                        },
+                                        0
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                }
+            },
         ])
             .skip(skip)
             .limit(Number(limit))
