@@ -85,17 +85,7 @@ exports.search = async (req, res) => {
                     "as": "comments"
                 }
             },
-            { "$unwind": { path: "$comments", preserveNullAndEmptyArrays: true } },
-            {
-                "$lookup": {
-                    "from": "users",
-                    "localField": "comment.user",
-                    "foreignField": "_id",
-                    "as": "comment.user"
-                }
-            },
-            { "$unwind": { path: "$comment.user", preserveNullAndEmptyArrays: true } },
-            
+
         ])
             .skip(skip)
             .limit(Number(limit))
@@ -103,8 +93,18 @@ exports.search = async (req, res) => {
 
 
         const postsWithLikes = posts.map(post => {
+            const comments = Array.isArray(post.comments) ? post.comments : [post.comments];
+
+            // نقوم بملء بيانات المستخدمين للتعليقات
+            const populatedComments = comments.map(comment => {
+                return {
+                    ...comment,
+                    user: comment.user,  // التأكد أن user موجود
+                };
+            }).sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)); // ترتيب التعليقات حسب التاريخ
+
             const hasLiked = post.likes.includes(currentUserId);
-            return { ...post, hasLiked, likesCount: post.likes.length.toString() };
+            return { ...post, hasLiked, likesCount: post.likes.length.toString(), comments: populatedComments };
         });
 
         // البحث في البودكاستات
