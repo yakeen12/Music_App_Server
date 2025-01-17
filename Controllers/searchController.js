@@ -85,7 +85,17 @@ exports.search = async (req, res) => {
                     "as": "comments"
                 }
             },
-
+            { "$unwind": { path: "$comments", preserveNullAndEmptyArrays: true } },
+            {
+                "$lookup": {
+                    "from": "users",
+                    "localField": "comment.user",
+                    "foreignField": "_id",
+                    "as": "comment.user"
+                }
+            },
+            { "$unwind": { path: "$comment.user", preserveNullAndEmptyArrays: true } },
+            
         ])
             .skip(skip)
             .limit(Number(limit))
@@ -93,9 +103,8 @@ exports.search = async (req, res) => {
 
 
         const postsWithLikes = posts.map(post => {
-            const comments = post.comments.populate('user', 'username profilePicture').sort({ createdAt: -1 }).lean();
             const hasLiked = post.likes.includes(currentUserId);
-            return { ...post, hasLiked, likesCount: post.likes.length.toString(), comments: comments };
+            return { ...post, hasLiked, likesCount: post.likes.length.toString() };
         });
 
         // البحث في البودكاستات
