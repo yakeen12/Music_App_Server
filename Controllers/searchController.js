@@ -80,7 +80,7 @@ exports.search = async (req, res) => {
             {
                 "$lookup": {
                     "from": "comments", //  جدول الكومنتات
-                    "localField": "comment",
+                    "localField": "comments",
                     "foreignField": "_id",
                     "as": "comment"
                 }
