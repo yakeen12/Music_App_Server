@@ -85,44 +85,7 @@ exports.search = async (req, res) => {
                     "as": "comments"
                 }
             },
-            { "$unwind": { path: "$comments", preserveNullAndEmptyArrays: true } },
-            {
-                "$lookup": {
-                    "from": "users",
-                    "localField": "comment.user",
-                    "foreignField": "_id",
-                    "as": "comment.user"
-                }
-            },
-            { "$unwind": { path: "$comment.user", preserveNullAndEmptyArrays: true } },
-            {
-                "$addFields": {
-                    "comments": {
-                        "$map": {
-                            "input": "$comments",
-                            "as": "comment",
-                            "in": {
-                                "_id": "$$comment._id",
-                                "content": "$$comment.content",
-                                "likes": "$$comment.likes",
-                                "createdAt": "$$comment.createdAt",
-                                "user": {
-                                    "$arrayElemAt": [
-                                        {
-                                            "$filter": {
-                                                "input": "$commentUsers",
-                                                "as": "user",
-                                                "cond": { "$eq": ["$$user._id", "$$comment.user"] }
-                                            }
-                                        },
-                                        0
-                                    ]
-                                }
-                            }
-                        }
-                    }
-                }
-            },
+
         ])
             .skip(skip)
             .limit(Number(limit))
@@ -130,8 +93,9 @@ exports.search = async (req, res) => {
 
 
         const postsWithLikes = posts.map(post => {
+            const comments = post.comments.populate('user', 'username profilePicture').sort({ createdAt: -1 }).lean();
             const hasLiked = post.likes.includes(currentUserId);
-            return { ...post, hasLiked, likesCount: post.likes.length.toString() };
+            return { ...post, hasLiked, likesCount: post.likes.length.toString(), comments: comments };
         });
 
         // البحث في البودكاستات
