@@ -76,15 +76,7 @@ exports.search = async (req, res) => {
                     "as": "episode.podcast"
                 }
             },
-            { "$unwind": { path: "$episode.podcast", preserveNullAndEmptyArrays: true } },
-            {
-                "$lookup": {
-                    "from": "comments", //  جدول الكومنتات
-                    "localField": "comments",
-                    "foreignField": "_id",
-                    "as": "comments"
-                }
-            },
+            { "$unwind": { path: "$episode.podcast", preserveNullAndEmptyArrays: true } }
 
         ])
             .skip(skip)
@@ -93,18 +85,8 @@ exports.search = async (req, res) => {
 
 
         const postsWithLikes = posts.map(post => {
-            const comments = Array.isArray(post.comments) ? post.comments : [post.comments];
-
-            // نقوم بملء بيانات المستخدمين للتعليقات
-            const populatedComments = comments.map(comment => {
-                return {
-                    ...comment,
-                    user: comment.user,  // التأكد أن user موجود
-                };
-            }).sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)); // ترتيب التعليقات حسب التاريخ
-
             const hasLiked = post.likes.includes(currentUserId);
-            return { ...post, hasLiked, likesCount: post.likes.length.toString(), comments: populatedComments };
+            return { ...post, hasLiked, likesCount: post.likes.length.toString() };
         });
 
         // البحث في البودكاستات
